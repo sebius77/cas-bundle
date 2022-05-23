@@ -1,4 +1,5 @@
 <?php
+// cas-bundle/Event/CASAuthenticationFailureEvent.php
 
 namespace Sebius77\CasBundle\Event;
 
@@ -7,9 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class CASAuthenticationSuccessEvent extends event {
+class CASAuthenticationFailureEvent extends event {
 
-    const POST_MESSAGE = 'cas_auth.authentication.success';
+    const POST_MESSAGE = 'cas_auth.authentication.failure';
 
     private $request;
     private $exception;
