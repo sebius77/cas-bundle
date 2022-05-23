@@ -1,0 +1,132 @@
+<?php
+// src/CasBundle/Security/CasAuthenticator.php
+namespace Sebius77\CasBundle\Security;
+
+use GuzzleHttp\Client;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Sebius77\CasBundle\Event\CASAuthenticationFailureEvent;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+
+
+class CasAuthenticator extends AbstractAuthenticator
+{
+    protected $server_login_url;
+    protected $server_validation_url;
+    protected $xml_namespace;
+    protected $username_attribute;
+    protected $query_ticket_parameter;
+    protected $query_service_parameter;
+    protected $options;
+
+    private $eventDispatcher;
+
+    public function __construct($config, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->server_login_url = $config['server_login_url'];
+        $this->server_validation_url = $config['server_validation_url'];
+        $this->xml_namespace = $config['xml_namespace'];
+        $this->username_attribute = $config['username_attribute'];
+        $this->query_service_parameter = $config['query_service_parameter'];
+        $this->query_ticket_parameter = $config['query_ticket_parameter'];
+        $this->options = $config['options'];
+
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * Called on every request to decide if this authenticator should be
+     * used for the request. Returning 'false' will cause this authenticator
+     * to be skipped.
+     */
+    public function supports(Request $request): ?bool
+    {
+        return $request->get($this->query_ticket_parameter);
+    }
+
+    public function authenticate(Request $request): Passport
+    {
+        $url = $this->server_validation_url . '?' . $this->query_ticket_parameter . '=' .
+            $request->get($this->query_ticket_parameter) . '&' .
+            $this->query_service_parameter . '=' . urlencode($this->removeCasTicket($request->getUri()));
+
+        $client = new Client();
+        $response = $client->request('GET', $url, $this->options);
+
+        $string = $response->getBody()->getContents();
+
+        $xml = new \SimpleXMLElement($string, 0, false, $this->xml_namespace, true);
+
+        if (isset($xml->authenticationSuccess)) {
+            return new SelfValidatingPassport(new UserBadge($xml));
+        }
+        return [];
+    }
+
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
+    {
+        if ($request->query->has($this->query_ticket_parameter)) {
+            return new RedirectResponse($this->removeCasTicket($request->getUri()));
+        }
+
+        return null;
+    }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    {
+        $data = [
+            'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
+        ];
+        $def_response = new JsonResponse($data, 403);
+
+        $event = new CASAuthenticationFailureEvent($request, $exception, $def_response);
+        $this->eventDispatcher->dispatch($event, CASAuthenticationFailureEvent::POST_MESSAGE);
+
+        return $event->getResponse();
+    }
+
+    /**
+     * Strip the CAS 'ticket' parameter from a uri.
+     */
+    protected function removeCasTicket($uri) {
+        $parsed_url = parse_url($uri);
+        // If there are no query parameters, then there is nothing to do.
+        if (empty($parsed_url['query'])) {
+            return $uri;
+        }
+        parse_str($parsed_url['query'], $query_params);
+        // If there is no 'ticket' parameter, there is nothing to do.
+        if (!isset($query_params[$this->query_ticket_parameter])) {
+            return $uri;
+        }
+        // Remove the ticket parameter and rebuild the query string.
+        unset($query_params[$this->query_ticket_parameter]);
+        if (empty($query_params)) {
+            unset($parsed_url['query']);
+        } else {
+            $parsed_url['query'] = http_build_query($query_params);
+        }
+  
+        // Rebuild the URI from the parsed components.
+        // Source: https://secure.php.net/manual/en/function.parse-url.php#106731
+        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+        $pass     = ($user || $pass) ? "$pass@" : '';
+        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+        return "$scheme$user$pass$host$port$path$query$fragment";
+      }
+   
+}

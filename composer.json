@@ -1,0 +1,28 @@
+{
+    "name": "sebius77/cas-bundle",
+    "type": "symfony-bundle",
+    "description": "Basic CAS (SSO) authenticator for Symfony 5.4 or more with the new authentication system inspired By Pierre Raynaud",
+    "keywords": ["PRayno", "Sebius77", "CAS", "SSO", "Symfony 5.4", "Symfony 6"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pierre Raynaud",
+            "email": "pierre.raynaud@uca.fr"
+        },
+		{
+			"name": "Sébastien Gaudin",
+			"email": "sebastien.gaudin@universite-paris-saclay.fr"
+		}
+    ],
+    "require": {
+        "symfony/config": "^6.0",
+        "symfony/dependency-injection": "^5.0|^6.0",
+        "symfony/http-foundation": "^5.0|^6.0",
+        "symfony/http-kernel": "^6.0",
+        "symfony/security-bundle": "^5.0|^6.0",
+        "guzzlehttp/guzzle": "^7.4.2"
+    },
+    "autoload": {
+        "psr-4": { "Sebius77\\CasBundle\\": ""}
+    }
+}
