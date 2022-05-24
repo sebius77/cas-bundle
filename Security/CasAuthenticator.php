@@ -67,7 +67,8 @@ class CasAuthenticator extends AbstractAuthenticator
         $xml = new \SimpleXMLElement($string, 0, false, $this->xml_namespace, true);
 
         if (isset($xml->authenticationSuccess)) {
-            return new SelfValidatingPassport(new UserBadge($xml));
+            $username = (array)$xml->authenticationSuccess[0];
+            return new SelfValidatingPassport(new UserBadge($username));
         }
         throw new CustomUserMessageAuthenticationException('Erreur rencontrée.....');
     }
