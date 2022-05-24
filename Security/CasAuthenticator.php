@@ -17,7 +17,6 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-
 class CasAuthenticator extends AbstractAuthenticator
 {
     protected $server_login_url;
@@ -67,10 +66,10 @@ class CasAuthenticator extends AbstractAuthenticator
         $xml = new \SimpleXMLElement($string, 0, false, $this->xml_namespace, true);
 
         if (isset($xml->authenticationSuccess)) {
-            $username = (array)$xml->authenticationSuccess[0];
+            $username = $xml->authenticationSuccess[0];
             return new SelfValidatingPassport(new UserBadge($username));
         }
-        throw new CustomUserMessageAuthenticationException('Erreur rencontrée.....');
+        throw new CustomUserMessageAuthenticationException('Authentication failed!');
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
@@ -87,6 +86,7 @@ class CasAuthenticator extends AbstractAuthenticator
         $data = [
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
         ];
+
         $def_response = new JsonResponse($data, 403);
 
         $event = new CASAuthenticationFailureEvent($request, $exception, $def_response);
@@ -130,5 +130,4 @@ class CasAuthenticator extends AbstractAuthenticator
         $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
         return "$scheme$user$pass$host$port$path$query$fragment";
       }
-   
 }
