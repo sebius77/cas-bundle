@@ -3,7 +3,7 @@
 
 namespace Sebius77\CasBundle\Security\User;
 
-use Sebius77\CasAuthBundle\Security\User\CasUser;
+use Sebius77\CasBundle\Security\User\CasUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
