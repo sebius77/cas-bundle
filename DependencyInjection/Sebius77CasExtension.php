@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  * This is the class that loads and manages your bundle configuration.
  * https://symfony.com/doc/current/bundles/extension.html
  */
-class Sebius77CasAuthExtension extends Extension
+class Sebius77CasExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
