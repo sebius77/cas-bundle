@@ -7,28 +7,34 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CasUser implements UserInterface
 {
-    private $username;
-    private $password;
-    private $salt;
-    private $roles;
+    private $uid;
+    private $roles = [];
 
-    /**
-     * @param string $username
-     * @param string $password
-     * @param string $salt
-     * @param array $roles
-     */
-    public function __construct($username, $password, $salt, array $roles)
+    public function getUid(): ?string
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->salt = $salt;
-        $this->roles = $roles;
+        return $this->uid;
+    }
+
+    public function setUid($uid): self
+    {
+        $this->uid = $uid;
+
+        return $this;
     }
 
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -50,7 +56,7 @@ class CasUser implements UserInterface
     /**
      * @return mixed
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }

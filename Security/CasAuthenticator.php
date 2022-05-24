@@ -1,5 +1,5 @@
 <?php
-// src/CasBundle/Security/CasAuthenticator.php
+// Sebius77/CasBundle/Security/CasAuthenticator.php
 namespace Sebius77\CasBundle\Security;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +51,7 @@ class CasAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return $request->get($this->query_ticket_parameter);
+        return (bool) $request->get($this->query_ticket_parameter);
     }
 
     public function authenticate(Request $request): Passport
@@ -60,15 +60,13 @@ class CasAuthenticator extends AbstractAuthenticator
             $request->get($this->query_ticket_parameter) . '&' .
             $this->query_service_parameter . '=' . urlencode($this->removeCasTicket($request->getUri()));
 
-        
         $response = $this->client->request('GET', $url, $this->options);
-
         $xml = new \SimpleXMLElement($response->getContent(), 0, false, $this->xml_namespace, true);
 
         if (isset($xml->authenticationSuccess)) {
             $username = (array)$xml->authenticationSuccess[0];
             return new SelfValidatingPassport(new UserBadge($username['user']));
-        }
+        } else
         throw new CustomUserMessageAuthenticationException('Authentication failed!');
     }
 
@@ -76,8 +74,7 @@ class CasAuthenticator extends AbstractAuthenticator
     {
         if ($request->query->has($this->query_ticket_parameter)) {
             return new RedirectResponse($this->removeCasTicket($request->getUri()));
-        }
-
+        } else
         return null;
     }
 
@@ -89,7 +86,7 @@ class CasAuthenticator extends AbstractAuthenticator
 
         $def_response = new JsonResponse($data, 403);
 
-        $event = new CASAuthenticationFailureEvent($request, $exception, $def_response);
+        $event = new CasAuthenticationFailureEvent($request, $exception, $def_response);
         $this->eventDispatcher->dispatch($event, CasAuthenticationFailureEvent::POST_MESSAGE);
 
         return $event->getResponse();

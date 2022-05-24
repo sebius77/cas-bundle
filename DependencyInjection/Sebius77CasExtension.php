@@ -2,8 +2,9 @@
 
 namespace Sebius77\CasBundle\DependencyInjection;
 
-
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Sebius77\CasBundle\DependencyInjection\Configuration;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -27,5 +28,10 @@ class Sebius77CasExtension extends Extension
 
         $container->register('sebius77.cas_user_provider',
             'Sebius77\CasBundle\Security\User\CasUserProvider');
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+
     }
 }

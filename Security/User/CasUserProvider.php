@@ -5,6 +5,7 @@ namespace Sebius77\CasBundle\Security\User;
 
 use Sebius77\CasAuthBundle\Security\User\CasUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,15 +23,15 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
         // Load a user object from your data source or throw UserNotFoundException.
         // The $identifier argument is whtatever value is being returned by the
         // getUserIdentifier() method in your User class.
-        if ($identifier) {
-            $password = '...';
-            $salt = "";
-            $roles = ["ROLE_USER"];
-
-            return new CasUser($identifier, $password, $salt, $roles);
+        if (!empty($identifier)) {
+            $user = new CasUser();
+            $user->setUid($identifier);
+            
+            return $user;
+            
         }
 
-        throw new \Exception('TODO: fill in loadUserByIdentifier() inside ' . __FILE__);
+        throw new UserNotFoundException();
     }
 
     public function loadUserByUsername(string $identifier)
