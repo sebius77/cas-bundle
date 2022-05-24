@@ -42,7 +42,7 @@ class CasUser implements UserInterface
      */
     public function getPassword()
     {
-        return $this->password;
+        return null;
     }
 
     /**
@@ -50,7 +50,7 @@ class CasUser implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
+        return null;
     }
 
     /**
