@@ -1,7 +1,7 @@
 <?php
 // src/CasBundle/Security/User/CasUser.php
 
-namespace Sebius77\CasAuthBundle\Security\User;
+namespace Sebius77\CasBundle\Security\User;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
