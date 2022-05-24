@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('sebius77_cas_auth');
+        $treeBuilder = new TreeBuilder('sebius77_cas');
         
         $rootNode = $treeBuilder->getRootNode();
     
