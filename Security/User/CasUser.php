@@ -58,12 +58,12 @@ class CasUser implements UserInterface
      */
     public function getUsername(): string
     {
-        return $this->username;
+        return (string) $this->uid;
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return (string) $this->uid;
     }
 
     /**
