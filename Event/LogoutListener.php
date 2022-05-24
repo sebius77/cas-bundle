@@ -1,6 +1,6 @@
 <?php
 
-namespace Sebius77\CasBundle\EventListener;
+namespace Sebius77\CasBundle\Event;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
