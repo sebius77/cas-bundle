@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Sebius77\CasBundle\Event\CASAuthenticationFailureEvent;
+use Sebius77\CasBundle\Event\CasAuthenticationFailureEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;

@@ -1,5 +1,5 @@
 <?php
-// cas-bundle/Event/CASAuthenticationFailureEvent.php
+// cas-bundle/Event/CasAuthenticationFailureEvent.php
 
 namespace Sebius77\CasBundle\Event;
 
