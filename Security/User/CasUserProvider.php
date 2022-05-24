@@ -33,6 +33,11 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
         throw new \Exception('TODO: fill in loadUserByIdentifier() inside ' . __FILE__);
     }
 
+    public function loadByUsername(string $identifier)
+    {
+
+    }
+
     /**
      * Refreshes the user after being reloaded from the session
      * 
