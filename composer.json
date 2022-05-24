@@ -23,6 +23,7 @@
         "guzzlehttp/guzzle": "^7.4.2"
     },
     "autoload": {
-        "psr-4": { "Sebius77\\CasBundle\\": ""}
-    }
+        "psr-0": { "Sebius77/CasBundle": ""}
+    },
+    "target-dir": "Sebius77/CasBundle"
 }
