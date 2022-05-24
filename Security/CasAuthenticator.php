@@ -2,7 +2,6 @@
 // src/CasBundle/Security/CasAuthenticator.php
 namespace Sebius77\CasBundle\Security;
 
-use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -16,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CasAuthenticator extends AbstractAuthenticator
 {
@@ -28,8 +28,9 @@ class CasAuthenticator extends AbstractAuthenticator
     protected $options;
 
     private $eventDispatcher;
+    private $client;
 
-    public function __construct($config, EventDispatcherInterface $eventDispatcher)
+    public function __construct($config, HttpClientInterface $client, EventDispatcherInterface $eventDispatcher)
     {
         $this->server_login_url = $config['server_login_url'];
         $this->server_validation_url = $config['server_validation_url'];
@@ -40,6 +41,7 @@ class CasAuthenticator extends AbstractAuthenticator
         $this->options = $config['options'];
 
         $this->eventDispatcher = $eventDispatcher;
+        $this->client = $client;
     }
 
     /**
@@ -58,16 +60,14 @@ class CasAuthenticator extends AbstractAuthenticator
             $request->get($this->query_ticket_parameter) . '&' .
             $this->query_service_parameter . '=' . urlencode($this->removeCasTicket($request->getUri()));
 
-        $client = new Client();
-        $response = $client->request('GET', $url, $this->options);
+        
+        $response = $this->client->request('GET', $url, $this->options);
 
-        $string = $response->getBody()->getContents();
-
-        $xml = new \SimpleXMLElement($string, 0, false, $this->xml_namespace, true);
+        $xml = new \SimpleXMLElement($response->getContent(), 0, false, $this->xml_namespace, true);
 
         if (isset($xml->authenticationSuccess)) {
-            $username = $xml->authenticationSuccess[0];
-            return new SelfValidatingPassport(new UserBadge($username));
+            $username = (array)$xml->authenticationSuccess[0];
+            return new SelfValidatingPassport(new UserBadge($username['user']));
         }
         throw new CustomUserMessageAuthenticationException('Authentication failed!');
     }
