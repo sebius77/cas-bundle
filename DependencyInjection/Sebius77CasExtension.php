@@ -21,6 +21,10 @@ class Sebius77CasExtension extends Extension
             'Sebius77\CasBundle\Security\CasAuthenticator');
         $authenticator->setArguments(array($config));
 
+        $entryPoint = $container->autowire('sebius77.cas_entry_point',
+        'Sebius77\CasBundle\Security\AuthenticationEntryPoint');
+        $entryPoint->setArguments(array($config));
+
         $container->register('sebius77.cas_user_provider',
             'Sebius77\CasBundle\Security\User\CasUserProvider');
     }
