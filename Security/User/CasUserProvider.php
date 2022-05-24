@@ -33,9 +33,18 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
         throw new \Exception('TODO: fill in loadUserByIdentifier() inside ' . __FILE__);
     }
 
-    public function loadByUsername(string $identifier)
+    public function loadUserByUsername(string $identifier)
     {
+        // getUserIdentifier() method in your User class.
+        if ($identifier) {
+            $password = '...';
+            $salt = "";
+            $roles = ["ROLE_USER"];
 
+            return new CasUser($identifier, $password, $salt, $roles);
+        }
+
+        throw new \Exception('TODO: fill in loadUserByIdentifier() inside ' . __FILE__);
     }
 
     /**

@@ -88,7 +88,7 @@ class CasAuthenticator extends AbstractAuthenticator
         $def_response = new JsonResponse($data, 403);
 
         $event = new CASAuthenticationFailureEvent($request, $exception, $def_response);
-        $this->eventDispatcher->dispatch($event, CASAuthenticationFailureEvent::POST_MESSAGE);
+        $this->eventDispatcher->dispatch($event, CasAuthenticationFailureEvent::POST_MESSAGE);
 
         return $event->getResponse();
     }
