@@ -45,6 +45,5 @@ Bundle for SSO authentication in Symfony 5.4 or more and inspired By PraynoCasAu
 The changes to the package are :
 
     - autoloading (PSR-0 to PSR-4)
-    - A future change to define user roles at login will be added
 
 

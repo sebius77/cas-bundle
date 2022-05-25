@@ -40,7 +40,6 @@ class CasAuthenticator extends AbstractAuthenticator
         $this->query_service_parameter = $config['query_service_parameter'];
         $this->query_ticket_parameter = $config['query_ticket_parameter'];
         $this->options = $config['options'];
-        $this->groups = $config['groups'];
 
         $this->eventDispatcher = $eventDispatcher;
         $this->client = $client;
