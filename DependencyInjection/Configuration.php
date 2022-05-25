@@ -35,7 +35,6 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('group')->end()
             ->scalarNode('role')->end()
-            ->end()
             ->scalarNode('username_attribute')
             ->defaultValue('user')
             ->end()
