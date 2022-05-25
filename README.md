@@ -33,8 +33,7 @@ Bundle for SSO authentication in Symfony 5.4 or more and inspired By PraynoCasAu
 
         main:
             logout: ~
-            remote_user:
-                provider: cas_user_provider
+            provider: cas_user_provider
             custom_authenticator: sebius77.cas_authenticator
             entry_point: sebius77.cas_entry_point
 
