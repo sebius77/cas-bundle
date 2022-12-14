@@ -30,9 +30,9 @@ use Symfony\Component\Security\Http\Event\LazyResponseEvent;
  */
 class AccessListener extends AbstractListener
 {
-    private $tokenStorage;
-    private $accessDecisionManager;
-    private $map;
+    private TokenStorageInterface $tokenStorage;
+    private AccessDecisionManagerInterface $accessDecisionManager;
+    private AccessMapInterface $map;
 
     public function __construct(TokenStorageInterface $tokenStorage, AccessDecisionManagerInterface $accessDecisionManager, AccessMapInterface $map, bool $exceptionOnNoToken = false)
     {
@@ -45,9 +45,6 @@ class AccessListener extends AbstractListener
         $this->map = $map;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(Request $request): ?bool
     {
         [$attributes] = $this->map->getPatterns($request);
@@ -82,10 +79,7 @@ class AccessListener extends AbstractListener
             return;
         }
 
-        $token = $this->tokenStorage->getToken();
-        if (null === $token) {
-            $token = new NullToken();
-        }
+        $token = $this->tokenStorage->getToken() ?? new NullToken();
 
         if (!$this->accessDecisionManager->decide($token, $attributes, $request, true)) {
             throw $this->createAccessDeniedException($request, $attributes);

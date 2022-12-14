@@ -32,8 +32,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class Firewall implements EventSubscriberInterface
 {
-    private $map;
-    private $dispatcher;
+    private FirewallMapInterface $map;
+    private EventDispatcherInterface $dispatcher;
 
     /**
      * @var \SplObjectStorage<Request, ExceptionListener>
@@ -102,9 +102,6 @@ class Firewall implements EventSubscriberInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents()
     {
         return [

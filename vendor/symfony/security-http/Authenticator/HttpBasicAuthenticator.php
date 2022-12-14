@@ -34,8 +34,8 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 class HttpBasicAuthenticator implements AuthenticatorInterface, AuthenticationEntryPointInterface
 {
     private string $realmName;
-    private $userProvider;
-    private $logger;
+    private UserProviderInterface $userProvider;
+    private ?LoggerInterface $logger;
 
     public function __construct(string $realmName, UserProviderInterface $userProvider, LoggerInterface $logger = null)
     {
@@ -63,10 +63,9 @@ class HttpBasicAuthenticator implements AuthenticatorInterface, AuthenticationEn
         $username = $request->headers->get('PHP_AUTH_USER');
         $password = $request->headers->get('PHP_AUTH_PW', '');
 
-        $passport = new Passport(
-            new UserBadge($username, [$this->userProvider, 'loadUserByIdentifier']),
-            new PasswordCredentials($password)
-        );
+        $userBadge = new UserBadge($username, $this->userProvider->loadUserByIdentifier(...));
+        $passport = new Passport($userBadge, new PasswordCredentials($password));
+
         if ($this->userProvider instanceof PasswordUpgraderInterface) {
             $passport->addBadge(new PasswordUpgradeBadge($password, $this->userProvider));
         }
@@ -86,9 +85,7 @@ class HttpBasicAuthenticator implements AuthenticatorInterface, AuthenticationEn
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        if (null !== $this->logger) {
-            $this->logger->info('Basic authentication failed for user.', ['username' => $request->headers->get('PHP_AUTH_USER'), 'exception' => $exception]);
-        }
+        $this->logger?->info('Basic authentication failed for user.', ['username' => $request->headers->get('PHP_AUTH_USER'), 'exception' => $exception]);
 
         return $this->start($request, $exception);
     }

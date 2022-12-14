@@ -13,7 +13,6 @@ namespace Symfony\Component\Security\Core\Authorization;
 
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * AuthorizationChecker is the main authorization point of the Security component.
@@ -25,8 +24,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
  */
 class AuthorizationChecker implements AuthorizationCheckerInterface
 {
-    private $tokenStorage;
-    private $accessDecisionManager;
+    private TokenStorageInterface $tokenStorage;
+    private AccessDecisionManagerInterface $accessDecisionManager;
 
     public function __construct(TokenStorageInterface $tokenStorage, AccessDecisionManagerInterface $accessDecisionManager, bool $exceptionOnNoToken = false)
     {
@@ -38,11 +37,6 @@ class AuthorizationChecker implements AuthorizationCheckerInterface
         $this->accessDecisionManager = $accessDecisionManager;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws AuthenticationCredentialsNotFoundException when the token storage has no authentication token and $exceptionOnNoToken is set to true
-     */
     final public function isGranted(mixed $attribute, mixed $subject = null): bool
     {
         $token = $this->tokenStorage->getToken();

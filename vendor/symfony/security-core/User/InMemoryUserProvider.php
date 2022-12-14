@@ -69,9 +69,6 @@ class InMemoryUserProvider implements UserProviderInterface
         return new InMemoryUser($user->getUserIdentifier(), $user->getPassword(), $user->getRoles(), $user->isEnabled());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof InMemoryUser) {
@@ -84,9 +81,6 @@ class InMemoryUserProvider implements UserProviderInterface
         return new InMemoryUser($userIdentifier, $storedUser->getPassword(), $storedUser->getRoles(), $storedUser->isEnabled());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass(string $class): bool
     {
         return InMemoryUser::class == $class;
@@ -97,7 +91,7 @@ class InMemoryUserProvider implements UserProviderInterface
      *
      * @throws UserNotFoundException if user whose given username does not exist
      */
-    private function getUser(string $username)/*: InMemoryUser */
+    private function getUser(string $username)/* : InMemoryUser */
     {
         if (!isset($this->users[strtolower($username)])) {
             $ex = new UserNotFoundException(sprintf('Username "%s" does not exist.', $username));

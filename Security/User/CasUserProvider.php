@@ -17,6 +17,7 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
     /**
      * Symfony calls this method if you use features like switch_user
      * or remember_me.
+     * @throws UserNotFoundException if the user is not found
      */
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
@@ -27,10 +28,8 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
             $user = new CasUser();
             $user->setUid($identifier);
             
-            return $user;
-            
+            return $user;    
         }
-
         throw new UserNotFoundException();
     }
 
@@ -46,6 +45,7 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
      * User object is loaded from the session and then this method is
      * called. Your job is to make sure the user's data is still fresh by,
      * for example, re-querying for fresh User Data.
+     * @return UserInterface
      */
     public function refreshUser(UserInterface $user)
     {
