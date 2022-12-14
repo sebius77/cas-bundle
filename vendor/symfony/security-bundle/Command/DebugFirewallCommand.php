@@ -33,8 +33,8 @@ use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 final class DebugFirewallCommand extends Command
 {
     private array $firewallNames;
-    private $contexts;
-    private $eventDispatchers;
+    private ContainerInterface $contexts;
+    private ContainerInterface $eventDispatchers;
     private array $authenticators;
 
     /**
@@ -218,7 +218,7 @@ EOF
             array_map(
                 static function ($authenticator) {
                     return [
-                        \get_class($authenticator),
+                        $authenticator::class,
                     ];
                 },
                 $authenticators
@@ -242,7 +242,7 @@ EOF
 
         if ($callable instanceof \Closure) {
             $r = new \ReflectionFunction($callable);
-            if (false !== strpos($r->name, '{closure}')) {
+            if (str_contains($r->name, '{closure}')) {
                 return 'Closure()';
             }
             if ($class = $r->getClosureScopeClass()) {
@@ -253,7 +253,7 @@ EOF
         }
 
         if (method_exists($callable, '__invoke')) {
-            return sprintf('%s::__invoke()', \get_class($callable));
+            return sprintf('%s::__invoke()', $callable::class);
         }
 
         throw new \InvalidArgumentException('Callable is not describable.');

@@ -36,12 +36,12 @@ use Symfony\Component\VarDumper\Cloner\Data;
  */
 class SecurityDataCollector extends DataCollector implements LateDataCollectorInterface
 {
-    private $tokenStorage;
-    private $roleHierarchy;
-    private $logoutUrlGenerator;
-    private $accessDecisionManager;
-    private $firewallMap;
-    private $firewall;
+    private ?TokenStorageInterface $tokenStorage;
+    private ?RoleHierarchyInterface $roleHierarchy;
+    private ?LogoutUrlGenerator $logoutUrlGenerator;
+    private ?AccessDecisionManagerInterface $accessDecisionManager;
+    private ?FirewallMapInterface $firewallMap;
+    private ?TraceableFirewallListener $firewall;
     private bool $hasVarDumper;
 
     public function __construct(TokenStorageInterface $tokenStorage = null, RoleHierarchyInterface $roleHierarchy = null, LogoutUrlGenerator $logoutUrlGenerator = null, AccessDecisionManagerInterface $accessDecisionManager = null, FirewallMapInterface $firewallMap = null, TraceableFirewallListener $firewall = null)
@@ -55,9 +55,6 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         $this->hasVarDumper = class_exists(ClassStub::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         if (null === $this->tokenStorage) {
@@ -110,10 +107,8 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
 
             $logoutUrl = null;
             try {
-                if (null !== $this->logoutUrlGenerator) {
-                    $logoutUrl = $this->logoutUrlGenerator->getLogoutPath();
-                }
-            } catch (\Exception $e) {
+                $logoutUrl = $this->logoutUrlGenerator?->getLogoutPath();
+            } catch (\Exception) {
                 // fail silently when the logout URL cannot be generated
             }
 
@@ -124,7 +119,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
                 'impersonator_user' => $impersonatorUser,
                 'impersonation_exit_path' => null,
                 'token' => $token,
-                'token_class' => $this->hasVarDumper ? new ClassStub(\get_class($token)) : \get_class($token),
+                'token_class' => $this->hasVarDumper ? new ClassStub($token::class) : $token::class,
                 'logout_url' => $logoutUrl,
                 'user' => $token->getUserIdentifier(),
                 'roles' => $assignedRoles,
@@ -142,7 +137,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
                     $voter = $voter->getDecoratedVoter();
                 }
 
-                $this->data['voters'][] = $this->hasVarDumper ? new ClassStub(\get_class($voter)) : \get_class($voter);
+                $this->data['voters'][] = $this->hasVarDumper ? new ClassStub($voter::class) : $voter::class;
             }
 
             // collect voter details
@@ -207,9 +202,6 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         $this->data['authenticators'] = $this->firewall ? $this->firewall->getAuthenticatorsInfo() : [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reset()
     {
         $this->data = [];
@@ -352,9 +344,6 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         return $this->data['authenticators'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return 'security';

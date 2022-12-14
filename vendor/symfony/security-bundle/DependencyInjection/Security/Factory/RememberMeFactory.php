@@ -113,7 +113,7 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
 
         foreach ($container->findTaggedServiceIds('security.remember_me_aware') as $serviceId => $attributes) {
             // register ContextListener
-            if ('security.context_listener' === substr($serviceId, 0, 25)) {
+            if (str_starts_with($serviceId, 'security.context_listener')) {
                 continue;
             }
 
@@ -235,9 +235,6 @@ class RememberMeFactory implements AuthenticatorFactoryInterface, PrependExtensi
         return new Reference($tokenVerifierId, ContainerInterface::NULL_ON_INVALID_REFERENCE);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prepend(ContainerBuilder $container)
     {
         $rememberMeSecureDefault = false;

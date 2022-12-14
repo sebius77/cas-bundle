@@ -12,6 +12,7 @@
 namespace Symfony\Component\Security\Core\Authorization;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Strategy\AccessDecisionStrategyInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
@@ -24,8 +25,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class TraceableAccessDecisionManager implements AccessDecisionManagerInterface
 {
-    private $manager;
-    private $strategy;
+    private AccessDecisionManagerInterface $manager;
+    private ?AccessDecisionStrategyInterface $strategy = null;
     /** @var iterable<mixed, VoterInterface> */
     private iterable $voters = [];
     private array $decisionLog = []; // All decision logs
@@ -35,20 +36,17 @@ class TraceableAccessDecisionManager implements AccessDecisionManagerInterface
     {
         $this->manager = $manager;
 
-        if ($this->manager instanceof AccessDecisionManager) {
-            // The strategy and voters are stored in a private properties of the decorated service
-            $reflection = new \ReflectionProperty(AccessDecisionManager::class, 'strategy');
-            $reflection->setAccessible(true);
+        // The strategy and voters are stored in a private properties of the decorated service
+        if (property_exists($manager, 'strategy')) {
+            $reflection = new \ReflectionProperty(\get_class($manager), 'strategy');
             $this->strategy = $reflection->getValue($manager);
-            $reflection = new \ReflectionProperty(AccessDecisionManager::class, 'voters');
-            $reflection->setAccessible(true);
+        }
+        if (property_exists($manager, 'voters')) {
+            $reflection = new \ReflectionProperty(\get_class($manager), 'voters');
             $this->voters = $reflection->getValue($manager);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function decide(TokenInterface $token, array $attributes, mixed $object = null, bool $allowMultipleAttributes = false): bool
     {
         $currentDecisionLog = [
@@ -108,8 +106,4 @@ class TraceableAccessDecisionManager implements AccessDecisionManagerInterface
     {
         return $this->decisionLog;
     }
-}
-
-if (!class_exists(DebugAccessDecisionManager::class, false)) {
-    class_alias(TraceableAccessDecisionManager::class, DebugAccessDecisionManager::class);
 }

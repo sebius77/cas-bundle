@@ -24,13 +24,13 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class InlineServiceDefinitionsPass extends AbstractRecursivePass
 {
-    private $analyzingPass;
+    private ?AnalyzeServiceReferencesPass $analyzingPass;
     private array $cloningIds = [];
     private array $connectedIds = [];
     private array $notInlinedIds = [];
     private array $inlinedIds = [];
     private array $notInlinableIds = [];
-    private $graph = null;
+    private ?ServiceReferenceGraph $graph = null;
 
     public function __construct(AnalyzeServiceReferencesPass $analyzingPass = null)
     {
@@ -104,9 +104,6 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function processValue(mixed $value, bool $isRoot = false): mixed
     {
         if ($value instanceof ArgumentInterface) {
@@ -163,7 +160,7 @@ class InlineServiceDefinitionsPass extends AbstractRecursivePass
      */
     private function isInlineableDefinition(string $id, Definition $definition): bool
     {
-        if ($definition->hasErrors() || $definition->isDeprecated() || $definition->isLazy() || $definition->isSynthetic()) {
+        if ($definition->hasErrors() || $definition->isDeprecated() || $definition->isLazy() || $definition->isSynthetic() || $definition->hasTag('container.do_not_inline')) {
             return false;
         }
 
