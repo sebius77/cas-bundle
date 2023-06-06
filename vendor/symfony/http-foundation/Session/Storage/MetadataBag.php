@@ -51,9 +51,6 @@ class MetadataBag implements SessionBagInterface
         $this->updateThreshold = $updateThreshold;
     }
 
-    /**
-     * @return void
-     */
     public function initialize(array &$array)
     {
         $this->meta = &$array;
@@ -81,12 +78,10 @@ class MetadataBag implements SessionBagInterface
     /**
      * Stamps a new session's metadata.
      *
-     * @param int|null $lifetime Sets the cookie lifetime for the session cookie. A null value
-     *                           will leave the system settings unchanged, 0 sets the cookie
-     *                           to expire with browser session. Time is in seconds, and is
-     *                           not a Unix timestamp.
-     *
-     * @return void
+     * @param int $lifetime Sets the cookie lifetime for the session cookie. A null value
+     *                      will leave the system settings unchanged, 0 sets the cookie
+     *                      to expire with browser session. Time is in seconds, and is
+     *                      not a Unix timestamp.
      */
     public function stampNew(int $lifetime = null)
     {
@@ -131,8 +126,6 @@ class MetadataBag implements SessionBagInterface
 
     /**
      * Sets name.
-     *
-     * @return void
      */
     public function setName(string $name)
     {

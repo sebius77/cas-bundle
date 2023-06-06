@@ -68,7 +68,7 @@ class LogoutListener extends AbstractListener
      * @throws LogoutException   if the CSRF token is invalid
      * @throws \RuntimeException if the LogoutSuccessHandlerInterface instance does not return a response
      */
-    public function authenticate(RequestEvent $event): void
+    public function authenticate(RequestEvent $event)
     {
         $request = $event->getRequest();
 

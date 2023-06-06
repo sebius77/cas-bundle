@@ -60,28 +60,22 @@ final class ParameterBagUtils
      *
      * @throws InvalidArgumentException when the given path is malformed
      */
-    public static function getRequestParameterValue(Request $request, string $path, array $parameters = []): mixed
+    public static function getRequestParameterValue(Request $request, string $path): mixed
     {
         if (false === $pos = strpos($path, '[')) {
-            return $parameters[$path] ?? $request->get($path);
+            return $request->get($path);
         }
 
         $root = substr($path, 0, $pos);
 
-        if (null === $value = $parameters[$root] ?? $request->get($root)) {
+        if (null === $value = $request->get($root)) {
             return null;
         }
 
         self::$propertyAccessor ??= PropertyAccess::createPropertyAccessor();
 
         try {
-            $value = self::$propertyAccessor->getValue($value, substr($path, $pos));
-
-            if (null === $value && isset($parameters[$root]) && null !== $value = $request->get($root)) {
-                $value = self::$propertyAccessor->getValue($value, substr($path, $pos));
-            }
-
-            return $value;
+            return self::$propertyAccessor->getValue($value, substr($path, $pos));
         } catch (AccessException) {
             return null;
         }

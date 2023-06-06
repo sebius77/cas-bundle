@@ -44,7 +44,7 @@ class LoginThrottlingFactory implements AuthenticatorFactoryInterface
     /**
      * @param ArrayNodeDefinition $builder
      */
-    public function addConfiguration(NodeDefinition $builder): void
+    public function addConfiguration(NodeDefinition $builder)
     {
         $builder
             ->children()
@@ -87,7 +87,7 @@ class LoginThrottlingFactory implements AuthenticatorFactoryInterface
         return [];
     }
 
-    private function registerRateLimiter(ContainerBuilder $container, string $name, array $limiterConfig): void
+    private function registerRateLimiter(ContainerBuilder $container, string $name, array $limiterConfig)
     {
         // default configuration (when used by other DI extensions)
         $limiterConfig += ['lock_factory' => 'lock.factory', 'cache_pool' => 'cache.rate_limiter'];

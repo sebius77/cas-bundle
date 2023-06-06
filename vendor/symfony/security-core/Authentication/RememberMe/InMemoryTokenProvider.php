@@ -31,9 +31,6 @@ class InMemoryTokenProvider implements TokenProviderInterface
         return $this->tokens[$series];
     }
 
-    /**
-     * @return void
-     */
     public function updateToken(string $series, #[\SensitiveParameter] string $tokenValue, \DateTime $lastUsed)
     {
         if (!isset($this->tokens[$series])) {
@@ -50,17 +47,11 @@ class InMemoryTokenProvider implements TokenProviderInterface
         $this->tokens[$series] = $token;
     }
 
-    /**
-     * @return void
-     */
     public function deleteTokenBySeries(string $series)
     {
         unset($this->tokens[$series]);
     }
 
-    /**
-     * @return void
-     */
     public function createNewToken(PersistentTokenInterface $token)
     {
         $this->tokens[$token->getSeries()] = $token;

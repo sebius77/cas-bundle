@@ -25,7 +25,7 @@ class DefinitionErrorExceptionPass extends AbstractRecursivePass
 {
     protected function processValue(mixed $value, bool $isRoot = false): mixed
     {
-        if (!$value instanceof Definition || !$value->hasErrors() || $value->hasTag('container.error')) {
+        if (!$value instanceof Definition || !$value->hasErrors()) {
             return parent::processValue($value, $isRoot);
         }
 

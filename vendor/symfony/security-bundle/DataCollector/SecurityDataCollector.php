@@ -55,7 +55,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         $this->hasVarDumper = class_exists(ClassStub::class);
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         if (null === $this->tokenStorage) {
             $this->data = [
@@ -145,7 +145,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
             foreach ($decisionLog as $key => $log) {
                 $decisionLog[$key]['voter_details'] = [];
                 foreach ($log['voterDetails'] as $voterDetail) {
-                    $voterClass = $voterDetail['voter']::class;
+                    $voterClass = \get_class($voterDetail['voter']);
                     $classData = $this->hasVarDumper ? new ClassStub($voterClass) : $voterClass;
                     $decisionLog[$key]['voter_details'][] = [
                         'class' => $classData,
@@ -202,12 +202,12 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         $this->data['authenticators'] = $this->firewall ? $this->firewall->getAuthenticatorsInfo() : [];
     }
 
-    public function reset(): void
+    public function reset()
     {
         $this->data = [];
     }
 
-    public function lateCollect(): void
+    public function lateCollect()
     {
         $this->data = $this->cloneVar($this->data);
     }

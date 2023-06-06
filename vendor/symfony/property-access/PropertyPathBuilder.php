@@ -33,8 +33,6 @@ class PropertyPathBuilder
      *
      * @param int $offset The offset where the appended piece starts in $path
      * @param int $length The length of the appended piece; if 0, the full path is appended
-     *
-     * @return void
      */
     public function append(PropertyPathInterface|string $path, int $offset = 0, int $length = 0)
     {
@@ -56,8 +54,6 @@ class PropertyPathBuilder
 
     /**
      * Appends an index element to the current path.
-     *
-     * @return void
      */
     public function appendIndex(string $name)
     {
@@ -67,8 +63,6 @@ class PropertyPathBuilder
 
     /**
      * Appends a property element to the current path.
-     *
-     * @return void
      */
     public function appendProperty(string $name)
     {
@@ -78,8 +72,6 @@ class PropertyPathBuilder
 
     /**
      * Removes elements from the current path.
-     *
-     * @return void
      *
      * @throws OutOfBoundsException if offset is invalid
      */
@@ -97,8 +89,6 @@ class PropertyPathBuilder
      *
      * @param int $pathOffset The offset where the inserted piece starts in $path
      * @param int $pathLength The length of the inserted piece; if 0, the full path is inserted
-     *
-     * @return void
      *
      * @throws OutOfBoundsException If the offset is invalid
      */
@@ -130,8 +120,6 @@ class PropertyPathBuilder
     /**
      * Replaces a property element by an index element.
      *
-     * @return void
-     *
      * @throws OutOfBoundsException If the offset is invalid
      */
     public function replaceByIndex(int $offset, string $name = null)
@@ -149,8 +137,6 @@ class PropertyPathBuilder
 
     /**
      * Replaces an index element by a property element.
-     *
-     * @return void
      *
      * @throws OutOfBoundsException If the offset is invalid
      */
@@ -210,7 +196,7 @@ class PropertyPathBuilder
      * removed at $offset and another chunk of length $insertionLength
      * can be inserted.
      */
-    private function resize(int $offset, int $cutLength, int $insertionLength): void
+    private function resize(int $offset, int $cutLength, int $insertionLength)
     {
         // Nothing else to do in this case
         if ($insertionLength === $cutLength) {

@@ -45,7 +45,7 @@ final class BoundArgument implements ArgumentInterface
         return [$this->value, $this->identifier, $this->used, $this->type, $this->file];
     }
 
-    public function setValues(array $values): void
+    public function setValues(array $values)
     {
         if (5 === \count($values)) {
             [$this->value, $this->identifier, $this->used, $this->type, $this->file] = $values;

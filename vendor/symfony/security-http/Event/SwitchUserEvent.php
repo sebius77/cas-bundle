@@ -49,7 +49,7 @@ final class SwitchUserEvent extends Event
         return $this->token;
     }
 
-    public function setToken(TokenInterface $token): void
+    public function setToken(TokenInterface $token)
     {
         $this->token = $token;
     }

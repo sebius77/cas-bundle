@@ -31,9 +31,6 @@ class UserPasswordValidator extends ConstraintValidator
         $this->hasherFactory = $hasherFactory;
     }
 
-    /**
-     * @return void
-     */
     public function validate(mixed $password, Constraint $constraint)
     {
         if (!$constraint instanceof UserPassword) {
@@ -41,9 +38,7 @@ class UserPasswordValidator extends ConstraintValidator
         }
 
         if (null === $password || '' === $password) {
-            $this->context->buildViolation($constraint->message)
-                ->setCode(UserPassword::INVALID_PASSWORD_ERROR)
-                ->addViolation();
+            $this->context->addViolation($constraint->message);
 
             return;
         }
@@ -61,9 +56,7 @@ class UserPasswordValidator extends ConstraintValidator
         $hasher = $this->hasherFactory->getPasswordHasher($user);
 
         if (null === $user->getPassword() || !$hasher->verify($user->getPassword(), $password, $user instanceof LegacyPasswordAuthenticatedUserInterface ? $user->getSalt() : null)) {
-            $this->context->buildViolation($constraint->message)
-                ->setCode(UserPassword::INVALID_PASSWORD_ERROR)
-                ->addViolation();
+            $this->context->addViolation($constraint->message);
         }
     }
 }

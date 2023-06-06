@@ -12,7 +12,6 @@
 namespace Symfony\Component\Security\Http\Event;
 
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
-use Symfony\Component\Security\Http\Authenticator\Debug\TraceableAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -38,7 +37,7 @@ class CheckPassportEvent extends Event
 
     public function getAuthenticator(): AuthenticatorInterface
     {
-        return $this->authenticator instanceof TraceableAuthenticator ? $this->authenticator->getAuthenticator() : $this->authenticator;
+        return $this->authenticator;
     }
 
     public function getPassport(): Passport

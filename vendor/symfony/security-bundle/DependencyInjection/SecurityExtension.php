@@ -14,9 +14,7 @@ namespace Symfony\Bundle\SecurityBundle\DependencyInjection;
 use Symfony\Bridge\Twig\Extension\LogoutUrlExtension;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\FirewallListenerFactoryInterface;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\StatelessAuthenticatorFactoryInterface;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\UserProvider\UserProviderFactoryInterface;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
@@ -78,9 +76,6 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
     private array $sortedFactories = [];
     private array $userProviderFactories = [];
 
-    /**
-     * @return void
-     */
     public function prepend(ContainerBuilder $container)
     {
         foreach ($this->getSortedFactories() as $factory) {
@@ -90,15 +85,9 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    /**
-     * @return void
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         if (!array_filter($configs)) {
-            trigger_deprecation('symfony/security-bundle', '6.3', 'Enabling bundle "%s" and not configuring it is deprecated.', SecurityBundle::class);
-            // uncomment the following line in 7.0
-            // throw new InvalidArgumentException(sprintf('Enabling bundle "%s" and not configuring it is not allowed.', SecurityBundle::class));
             return;
         }
 
@@ -206,7 +195,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         };
     }
 
-    private function createRoleHierarchy(array $config, ContainerBuilder $container): void
+    private function createRoleHierarchy(array $config, ContainerBuilder $container)
     {
         if (!isset($config['role_hierarchy']) || 0 === \count($config['role_hierarchy'])) {
             $container->removeDefinition('security.access.role_hierarchy_voter');
@@ -218,7 +207,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         $container->removeDefinition('security.access.simple_role_voter');
     }
 
-    private function createAuthorization(array $config, ContainerBuilder $container): void
+    private function createAuthorization(array $config, ContainerBuilder $container)
     {
         foreach ($config['access_control'] as $access) {
             if (isset($access['request_matcher'])) {
@@ -271,7 +260,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function createFirewalls(array $config, ContainerBuilder $container): void
+    private function createFirewalls(array $config, ContainerBuilder $container)
     {
         if (!isset($config['firewalls'])) {
             return;
@@ -359,7 +348,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    private function createFirewall(ContainerBuilder $container, string $id, array $firewall, array &$authenticationProviders, array $providerIds, string $configId): array
+    private function createFirewall(ContainerBuilder $container, string $id, array $firewall, array &$authenticationProviders, array $providerIds, string $configId)
     {
         $config = $container->setDefinition($configId, new ChildDefinition('security.firewall.config'));
         $config->replaceArgument(0, $id);
@@ -457,13 +446,14 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
                 'logout_path' => $firewall['logout']['path'],
             ]);
 
-            $container->setDefinition('security.logout.listener.default.'.$id, new ChildDefinition('security.logout.listener.default'))
+            $logoutSuccessListenerId = 'security.logout.listener.default.'.$id;
+            $container->setDefinition($logoutSuccessListenerId, new ChildDefinition('security.logout.listener.default'))
                 ->replaceArgument(1, $firewall['logout']['target'])
                 ->addTag('kernel.event_subscriber', ['dispatcher' => $firewallEventDispatcherId]);
 
             // add CSRF provider
             if ($firewall['logout']['enable_csrf']) {
-                $logoutListener->addArgument(new Reference($firewall['logout']['csrf_token_manager']));
+                $logoutListener->addArgument(new Reference($firewall['logout']['csrf_token_generator']));
             }
 
             // add session logout listener
@@ -479,13 +469,6 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
                     ->addTag('kernel.event_subscriber', ['dispatcher' => $firewallEventDispatcherId]);
             }
 
-            // add clear site data listener
-            if ($firewall['logout']['clear_site_data'] ?? false) {
-                $container->setDefinition('security.logout.listener.clear_site_data.'.$id, new ChildDefinition('security.logout.listener.clear_site_data'))
-                    ->addArgument($firewall['logout']['clear_site_data'])
-                    ->addTag('kernel.event_subscriber', ['dispatcher' => $firewallEventDispatcherId]);
-            }
-
             // register with LogoutUrlGenerator
             $container
                 ->getDefinition('security.logout_url_generator')
@@ -494,7 +477,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
                     $firewall['logout']['path'],
                     $firewall['logout']['csrf_token_id'],
                     $firewall['logout']['csrf_parameter'],
-                    isset($firewall['logout']['csrf_token_manager']) ? new Reference($firewall['logout']['csrf_token_manager']) : null,
+                    isset($firewall['logout']['csrf_token_generator']) ? new Reference($firewall['logout']['csrf_token_generator']) : null,
                     false === $firewall['stateless'] && isset($firewall['context']) ? $firewall['context'] : null,
                 ])
             ;
@@ -513,7 +496,9 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         $configuredEntryPoint = $defaultEntryPoint;
 
         // authenticator manager
-        $authenticators = array_map(fn ($id) => new Reference($id), $firewallAuthenticationProviders);
+        $authenticators = array_map(function ($id) {
+            return new Reference($id);
+        }, $firewallAuthenticationProviders);
         $container
             ->setDefinition($managerId = 'security.authenticator.manager.'.$id, new ChildDefinition('security.authenticator.manager'))
             ->replaceArgument(0, $authenticators)
@@ -611,7 +596,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         return $this->contextListeners[$contextKey] = $listenerId;
     }
 
-    private function createAuthenticationListeners(ContainerBuilder $container, string $id, array $firewall, array &$authenticationProviders, ?string $defaultProvider, array $providerIds, ?string $defaultEntryPoint, string $contextListenerId = null): array
+    private function createAuthenticationListeners(ContainerBuilder $container, string $id, array $firewall, array &$authenticationProviders, ?string $defaultProvider, array $providerIds, ?string $defaultEntryPoint, string $contextListenerId = null)
     {
         $listeners = [];
         $entryPoints = [];
@@ -624,10 +609,6 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
 
                 if (!$factory instanceof AuthenticatorFactoryInterface) {
                     throw new InvalidConfigurationException(sprintf('Authenticator factory "%s" ("%s") must implement "%s".', get_debug_type($factory), $key, AuthenticatorFactoryInterface::class));
-                }
-
-                if (null === $userProvider && !$factory instanceof StatelessAuthenticatorFactoryInterface) {
-                    $userProvider = $this->createMissingUserProvider($container, $id, $key);
                 }
 
                 $authenticators = $factory->createAuthenticator($container, $id, $firewall[$key], $userProvider);
@@ -656,7 +637,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         return [$listeners, $defaultEntryPoint];
     }
 
-    private function getUserProvider(ContainerBuilder $container, string $id, array $firewall, string $factoryKey, ?string $defaultProvider, array $providerIds, ?string $contextListenerId): ?string
+    private function getUserProvider(ContainerBuilder $container, string $id, array $firewall, string $factoryKey, ?string $defaultProvider, array $providerIds, ?string $contextListenerId): string
     {
         if (isset($firewall[$factoryKey]['provider'])) {
             if (!isset($providerIds[$normalizedName = str_replace('-', '_', $firewall[$factoryKey]['provider'])])) {
@@ -675,11 +656,13 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         }
 
         if (!$providerIds) {
-            if ($firewall['stateless'] ?? false) {
-                return null;
-            }
+            $userProvider = sprintf('security.user.provider.missing.%s', $factoryKey);
+            $container->setDefinition(
+                $userProvider,
+                (new ChildDefinition('security.user.provider.missing'))->replaceArgument(0, $id)
+            );
 
-            return $this->createMissingUserProvider($container, $id, $factoryKey);
+            return $userProvider;
         }
 
         if ('remember_me' === $factoryKey || 'anonymous' === $factoryKey || 'custom_authenticators' === $factoryKey) {
@@ -693,18 +676,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         throw new InvalidConfigurationException(sprintf('Not configuring explicitly the provider for the "%s" authenticator on "%s" firewall is ambiguous as there is more than one registered provider.', $factoryKey, $id));
     }
 
-    private function createMissingUserProvider(ContainerBuilder $container, string $id, string $factoryKey): string
-    {
-        $userProvider = sprintf('security.user.provider.missing.%s', $factoryKey);
-        $container->setDefinition(
-            $userProvider,
-            (new ChildDefinition('security.user.provider.missing'))->replaceArgument(0, $id)
-        );
-
-        return $userProvider;
-    }
-
-    private function createHashers(array $hashers, ContainerBuilder $container): void
+    private function createHashers(array $hashers, ContainerBuilder $container)
     {
         $hasherMap = [];
         foreach ($hashers as $class => $hasher) {
@@ -717,12 +689,7 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         ;
     }
 
-    /**
-     * @param array<string, mixed> $config
-     *
-     * @return Reference|array<string, mixed>
-     */
-    private function createHasher(array $config): Reference|array
+    private function createHasher(array $config)
     {
         // a custom hasher service
         if (isset($config['id'])) {
@@ -1013,13 +980,13 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
         return $this->requestMatchers[$id] = new Reference($id);
     }
 
-    public function addAuthenticatorFactory(AuthenticatorFactoryInterface $factory): void
+    public function addAuthenticatorFactory(AuthenticatorFactoryInterface $factory)
     {
         $this->factories[] = [$factory->getPriority(), $factory];
         $this->sortedFactories = [];
     }
 
-    public function addUserProviderFactory(UserProviderFactoryInterface $factory): void
+    public function addUserProviderFactory(UserProviderFactoryInterface $factory)
     {
         $this->userProviderFactories[] = $factory;
     }
@@ -1042,7 +1009,9 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
 
     private function isValidIps(string|array $ips): bool
     {
-        $ipsList = array_reduce((array) $ips, static fn (array $ips, string $ip) => array_merge($ips, preg_split('/\s*,\s*/', $ip)), []);
+        $ipsList = array_reduce((array) $ips, static function (array $ips, string $ip) {
+            return array_merge($ips, preg_split('/\s*,\s*/', $ip));
+        }, []);
 
         if (!$ipsList) {
             return false;
@@ -1094,7 +1063,9 @@ class SecurityExtension extends Extension implements PrependExtensionInterface
                 $factories[] = array_merge($factory, [$i]);
             }
 
-            usort($factories, fn ($a, $b) => $b[0] <=> $a[0] ?: $a[2] <=> $b[2]);
+            usort($factories, function ($a, $b) {
+                return $b[0] <=> $a[0] ?: $a[2] <=> $b[2];
+            });
 
             $this->sortedFactories = array_column($factories, 1);
         }

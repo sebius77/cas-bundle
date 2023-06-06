@@ -35,8 +35,6 @@ interface DumperInterface
 
     /**
      * Generates the code for the lazy proxy.
-     *
-     * @param string|null $id
      */
     public function getProxyCode(Definition $definition/* , string $id = null */): string;
 }

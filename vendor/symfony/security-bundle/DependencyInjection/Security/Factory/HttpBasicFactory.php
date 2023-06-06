@@ -48,7 +48,7 @@ class HttpBasicFactory implements AuthenticatorFactoryInterface
         return 'http-basic';
     }
 
-    public function addConfiguration(NodeDefinition $node): void
+    public function addConfiguration(NodeDefinition $node)
     {
         $node
             ->children()

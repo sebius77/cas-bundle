@@ -28,11 +28,6 @@ class RememberMeBadge implements BadgeInterface
 {
     private bool $enabled = false;
 
-    public function __construct(
-        public readonly array $parameters = [],
-    ) {
-    }
-
     /**
      * Enables remember-me cookie creation.
      *

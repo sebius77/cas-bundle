@@ -31,7 +31,7 @@ final class LazyResponseEvent extends RequestEvent
         $this->event = $event;
     }
 
-    public function setResponse(Response $response): never
+    public function setResponse(Response $response)
     {
         $this->stopPropagation();
         $this->event->stopPropagation();

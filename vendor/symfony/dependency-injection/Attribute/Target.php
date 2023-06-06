@@ -28,15 +28,13 @@ final class Target
         $this->name = lcfirst(str_replace(' ', '', ucwords(preg_replace('/[^a-zA-Z0-9\x7f-\xff]++/', ' ', $name))));
     }
 
-    public static function parseName(\ReflectionParameter $parameter, self &$attribute = null): string
+    public static function parseName(\ReflectionParameter $parameter): string
     {
-        $attribute = null;
         if (!$target = $parameter->getAttributes(self::class)[0] ?? null) {
             return $parameter->name;
         }
 
-        $attribute = $target->newInstance();
-        $name = $attribute->name;
+        $name = $target->newInstance()->name;
 
         if (!preg_match('/^[a-zA-Z_\x7f-\xff]/', $name)) {
             if (($function = $parameter->getDeclaringFunction()) instanceof \ReflectionMethod) {

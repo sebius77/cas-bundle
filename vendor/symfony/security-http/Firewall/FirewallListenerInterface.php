@@ -32,8 +32,6 @@ interface FirewallListenerInterface
 
     /**
      * Does whatever is required to authenticate the request, typically calling $event->setResponse() internally.
-     *
-     * @return void
      */
     public function authenticate(RequestEvent $event);
 

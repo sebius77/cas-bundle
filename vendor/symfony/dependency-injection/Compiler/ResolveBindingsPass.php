@@ -32,9 +32,6 @@ class ResolveBindingsPass extends AbstractRecursivePass
     private array $unusedBindings = [];
     private array $errorMessages = [];
 
-    /**
-     * @return void
-     */
     public function process(ContainerBuilder $container)
     {
         $this->usedBindings = $container->getRemovedBindingIds();
@@ -174,15 +171,8 @@ class ResolveBindingsPass extends AbstractRecursivePass
                 }
             }
 
-            $names = [];
-
             foreach ($reflectionMethod->getParameters() as $key => $parameter) {
-                $names[$key] = $parameter->name;
-
                 if (\array_key_exists($key, $arguments) && '' !== $arguments[$key]) {
-                    continue;
-                }
-                if (\array_key_exists($parameter->name, $arguments) && '' !== $arguments[$parameter->name]) {
                     continue;
                 }
 
@@ -215,15 +205,8 @@ class ResolveBindingsPass extends AbstractRecursivePass
                 }
             }
 
-            foreach ($names as $key => $name) {
-                if (\array_key_exists($name, $arguments) && (0 === $key || \array_key_exists($key - 1, $arguments))) {
-                    $arguments[$key] = $arguments[$name];
-                    unset($arguments[$name]);
-                }
-            }
-
             if ($arguments !== $call[1]) {
-                ksort($arguments, \SORT_NATURAL);
+                ksort($arguments);
                 $calls[$i][1] = $arguments;
             }
         }

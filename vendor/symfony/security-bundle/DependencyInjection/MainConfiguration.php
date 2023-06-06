@@ -40,7 +40,7 @@ class MainConfiguration implements ConfigurationInterface
     private array $userProviderFactories;
 
     /**
-     * @param array<AuthenticatorFactoryInterface> $factories
+     * @param array<array-key, AuthenticatorFactoryInterface> $factories
      */
     public function __construct(array $factories, array $userProviderFactories)
     {
@@ -78,15 +78,15 @@ class MainConfiguration implements ConfigurationInterface
                         ->booleanNode('allow_if_equal_granted_denied')->defaultTrue()->end()
                     ->end()
                     ->validate()
-                        ->ifTrue(fn ($v) => isset($v['strategy'], $v['service']))
+                        ->ifTrue(function ($v) { return isset($v['strategy'], $v['service']); })
                         ->thenInvalid('"strategy" and "service" cannot be used together.')
                     ->end()
                     ->validate()
-                        ->ifTrue(fn ($v) => isset($v['strategy'], $v['strategy_service']))
+                        ->ifTrue(function ($v) { return isset($v['strategy'], $v['strategy_service']); })
                         ->thenInvalid('"strategy" and "strategy_service" cannot be used together.')
                     ->end()
                     ->validate()
-                        ->ifTrue(fn ($v) => isset($v['service'], $v['strategy_service']))
+                        ->ifTrue(function ($v) { return isset($v['service'], $v['strategy_service']); })
                         ->thenInvalid('"service" and "strategy_service" cannot be used together.')
                     ->end()
                 ->end()
@@ -102,7 +102,7 @@ class MainConfiguration implements ConfigurationInterface
         return $tb;
     }
 
-    private function addRoleHierarchySection(ArrayNodeDefinition $rootNode): void
+    private function addRoleHierarchySection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->fixXmlConfig('role', 'role_hierarchy')
@@ -111,10 +111,10 @@ class MainConfiguration implements ConfigurationInterface
                     ->useAttributeAsKey('id')
                     ->prototype('array')
                         ->performNoDeepMerging()
-                        ->beforeNormalization()->ifString()->then(fn ($v) => ['value' => $v])->end()
+                        ->beforeNormalization()->ifString()->then(function ($v) { return ['value' => $v]; })->end()
                         ->beforeNormalization()
-                            ->ifTrue(fn ($v) => \is_array($v) && isset($v['value']))
-                            ->then(fn ($v) => preg_split('/\s*,\s*/', $v['value']))
+                            ->ifTrue(function ($v) { return \is_array($v) && isset($v['value']); })
+                            ->then(function ($v) { return preg_split('/\s*,\s*/', $v['value']); })
                         ->end()
                         ->prototype('scalar')->end()
                     ->end()
@@ -123,7 +123,7 @@ class MainConfiguration implements ConfigurationInterface
         ;
     }
 
-    private function addAccessControlSection(ArrayNodeDefinition $rootNode): void
+    private function addAccessControlSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->fixXmlConfig('rule', 'access_control')
@@ -173,9 +173,9 @@ class MainConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param array<AuthenticatorFactoryInterface> $factories
+     * @param array<array-key, AuthenticatorFactoryInterface> $factories
      */
-    private function addFirewallsSection(ArrayNodeDefinition $rootNode, array $factories): void
+    private function addFirewallsSection(ArrayNodeDefinition $rootNode, array $factories)
     {
         $firewallNodeBuilder = $rootNode
             ->fixXmlConfig('firewall')
@@ -217,20 +217,12 @@ class MainConfiguration implements ConfigurationInterface
                 ->treatTrueLike([])
                 ->canBeUnset()
                 ->beforeNormalization()
-                    ->ifTrue(fn ($v): bool => isset($v['csrf_token_generator']) && !isset($v['csrf_token_manager']))
+                    ->ifTrue(fn ($v): bool => \is_array($v) && (isset($v['csrf_token_generator']) xor isset($v['enable_csrf'])))
                     ->then(function (array $v): array {
-                        $v['csrf_token_manager'] = $v['csrf_token_generator'];
-
-                        return $v;
-                    })
-                ->end()
-                ->beforeNormalization()
-                    ->ifTrue(fn ($v): bool => \is_array($v) && (isset($v['csrf_token_manager']) xor isset($v['enable_csrf'])))
-                    ->then(function (array $v): array {
-                        if (isset($v['csrf_token_manager'])) {
+                        if (isset($v['csrf_token_generator'])) {
                             $v['enable_csrf'] = true;
                         } elseif ($v['enable_csrf']) {
-                            $v['csrf_token_manager'] = 'security.csrf.token_manager';
+                            $v['csrf_token_generator'] = 'security.csrf.token_manager';
                         }
 
                         return $v;
@@ -240,26 +232,10 @@ class MainConfiguration implements ConfigurationInterface
                     ->booleanNode('enable_csrf')->defaultNull()->end()
                     ->scalarNode('csrf_token_id')->defaultValue('logout')->end()
                     ->scalarNode('csrf_parameter')->defaultValue('_csrf_token')->end()
-                    ->scalarNode('csrf_token_generator')
-                        ->setDeprecated(
-                            'symfony/security-bundle',
-                            '6.3',
-                            'The "%node%" option is deprecated. Use "csrf_token_manager" instead.'
-                        )
-                    ->end()
-                    ->scalarNode('csrf_token_manager')->end()
+                    ->scalarNode('csrf_token_generator')->end()
                     ->scalarNode('path')->defaultValue('/logout')->end()
                     ->scalarNode('target')->defaultValue('/')->end()
                     ->booleanNode('invalidate_session')->defaultTrue()->end()
-                    ->arrayNode('clear_site_data')
-                        ->performNoDeepMerging()
-                        ->beforeNormalization()->ifString()->then(fn ($v) => $v ? array_map('trim', explode(',', $v)) : [])->end()
-                        ->enumPrototype()
-                            ->values([
-                                '*', 'cache', 'cookies', 'storage', 'executionContexts',
-                            ])
-                        ->end()
-                    ->end()
                 ->end()
                 ->fixXmlConfig('delete_cookie')
                 ->children()
@@ -333,7 +309,9 @@ class MainConfiguration implements ConfigurationInterface
         $firewallNodeBuilder
             ->end()
             ->validate()
-                ->ifTrue(fn ($v) => true === $v['security'] && isset($v['pattern']) && !isset($v['request_matcher']))
+                ->ifTrue(function ($v) {
+                    return true === $v['security'] && isset($v['pattern']) && !isset($v['request_matcher']);
+                })
                 ->then(function ($firewall) use ($abstractFactoryKeys) {
                     foreach ($abstractFactoryKeys as $k) {
                         if (!isset($firewall[$k]['check_path'])) {
@@ -351,7 +329,7 @@ class MainConfiguration implements ConfigurationInterface
         ;
     }
 
-    private function addProvidersSection(ArrayNodeDefinition $rootNode): void
+    private function addProvidersSection(ArrayNodeDefinition $rootNode)
     {
         $providerNodeBuilder = $rootNode
             ->fixXmlConfig('provider')
@@ -382,7 +360,7 @@ class MainConfiguration implements ConfigurationInterface
                         ->arrayNode('providers')
                             ->beforeNormalization()
                                 ->ifString()
-                                ->then(fn ($v) => preg_split('/\s*,\s*/', $v))
+                                ->then(function ($v) { return preg_split('/\s*,\s*/', $v); })
                             ->end()
                             ->prototype('scalar')->end()
                         ->end()
@@ -400,17 +378,17 @@ class MainConfiguration implements ConfigurationInterface
 
         $providerNodeBuilder
             ->validate()
-                ->ifTrue(fn ($v) => \count($v) > 1)
+                ->ifTrue(function ($v) { return \count($v) > 1; })
                 ->thenInvalid('You cannot set multiple provider types for the same provider')
             ->end()
             ->validate()
-                ->ifTrue(fn ($v) => 0 === \count($v))
+                ->ifTrue(function ($v) { return 0 === \count($v); })
                 ->thenInvalid('You must set a provider definition for the provider.')
             ->end()
         ;
     }
 
-    private function addPasswordHashersSection(ArrayNodeDefinition $rootNode): void
+    private function addPasswordHashersSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
             ->fixXmlConfig('password_hasher')

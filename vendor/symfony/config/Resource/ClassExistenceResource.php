@@ -32,7 +32,7 @@ class ClassExistenceResource implements SelfCheckingResourceInterface
 
     /**
      * @param string    $resource The fully-qualified class name
-     * @param bool|null $exists   Boolean when the existence check has already been done
+     * @param bool|null $exists   Boolean when the existency check has already been done
      */
     public function __construct(string $resource, bool $exists = null)
     {
@@ -139,7 +139,7 @@ class ClassExistenceResource implements SelfCheckingResourceInterface
      *
      * @internal
      */
-    public static function throwOnRequiredClass(string $class, \Exception $previous = null): void
+    public static function throwOnRequiredClass(string $class, \Exception $previous = null)
     {
         // If the passed class is the resource being checked, we shouldn't throw.
         if (null === $previous && self::$autoloadedClass === $class) {
@@ -160,7 +160,7 @@ class ClassExistenceResource implements SelfCheckingResourceInterface
 
         $message = sprintf('Class "%s" not found.', $class);
 
-        if ($class !== (self::$autoloadedClass ?? $class)) {
+        if (self::$autoloadedClass !== $class) {
             $message = substr_replace($message, sprintf(' while loading "%s"', self::$autoloadedClass), -1, 0);
         }
 

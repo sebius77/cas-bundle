@@ -50,7 +50,10 @@ class AccessListener extends AbstractListener
         [$attributes] = $this->map->getPatterns($request);
         $request->attributes->set('_access_control_attributes', $attributes);
 
-        if ($attributes && [AuthenticatedVoter::PUBLIC_ACCESS] !== $attributes) {
+        if ($attributes && (
+            (\defined(AuthenticatedVoter::class.'::IS_AUTHENTICATED_ANONYMOUSLY') ? [AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY] !== $attributes : true)
+            && [AuthenticatedVoter::PUBLIC_ACCESS] !== $attributes
+        )) {
             return true;
         }
 
@@ -62,16 +65,17 @@ class AccessListener extends AbstractListener
      *
      * @throws AccessDeniedException
      */
-    public function authenticate(RequestEvent $event): void
+    public function authenticate(RequestEvent $event)
     {
         $request = $event->getRequest();
 
         $attributes = $request->attributes->get('_access_control_attributes');
         $request->attributes->remove('_access_control_attributes');
 
-        if (!$attributes || (
-            [AuthenticatedVoter::PUBLIC_ACCESS] === $attributes && $event instanceof LazyResponseEvent
-        )) {
+        if (!$attributes || ((
+            (\defined(AuthenticatedVoter::class.'::IS_AUTHENTICATED_ANONYMOUSLY') ? [AuthenticatedVoter::IS_AUTHENTICATED_ANONYMOUSLY] === $attributes : false)
+            || [AuthenticatedVoter::PUBLIC_ACCESS] === $attributes
+        ) && $event instanceof LazyResponseEvent)) {
             return;
         }
 
@@ -82,7 +86,7 @@ class AccessListener extends AbstractListener
         }
     }
 
-    private function createAccessDeniedException(Request $request, array $attributes): AccessDeniedException
+    private function createAccessDeniedException(Request $request, array $attributes)
     {
         $exception = new AccessDeniedException();
         $exception->setAttributes($attributes);

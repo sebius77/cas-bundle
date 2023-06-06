@@ -145,16 +145,18 @@ class EnvVarProcessor implements EnvVarProcessorInterface
 
         if (false !== $i || 'string' !== $prefix) {
             $env = $getEnv($name);
-        } elseif ('' === ($env = $_ENV[$name] ?? (str_starts_with($name, 'HTTP_') ? null : ($_SERVER[$name] ?? null)))
-            || false === ($env = $env ?? getenv($name) ?? false) // null is a possible value because of thread safety issues
-        ) {
+        } elseif (isset($_ENV[$name])) {
+            $env = $_ENV[$name];
+        } elseif (isset($_SERVER[$name]) && !str_starts_with($name, 'HTTP_')) {
+            $env = $_SERVER[$name];
+        } elseif (false === ($env = getenv($name)) || null === $env) { // null is a possible value because of thread safety issues
             foreach ($this->loadedVars as $vars) {
-                if (false !== ($env = ($vars[$name] ?? $env)) && '' !== $env) {
+                if (false !== $env = ($vars[$name] ?? false)) {
                     break;
                 }
             }
 
-            if (false === $env || '' === $env) {
+            if (false === $env || null === $env) {
                 $loaders = $this->loaders;
                 $this->loaders = new \ArrayIterator();
 
@@ -167,7 +169,7 @@ class EnvVarProcessor implements EnvVarProcessorInterface
                             continue;
                         }
                         $this->loadedVars[] = $vars = $loader->loadEnvVars();
-                        if (false !== ($env = ($vars[$name] ?? $env)) && '' !== $env) {
+                        if (false !== $env = $vars[$name] ?? false) {
                             $ended = false;
                             break;
                         }
@@ -182,7 +184,7 @@ class EnvVarProcessor implements EnvVarProcessorInterface
                 }
             }
 
-            if (false === $env) {
+            if (false === $env || null === $env) {
                 if (!$this->container->hasParameter("env($name)")) {
                     throw new EnvNotFoundException(sprintf('Environment variable not found: "%s".', $name));
                 }
@@ -216,7 +218,7 @@ class EnvVarProcessor implements EnvVarProcessorInterface
         if (\in_array($prefix, ['bool', 'not'], true)) {
             $env = (bool) (filter_var($env, \FILTER_VALIDATE_BOOL) ?: filter_var($env, \FILTER_VALIDATE_INT) ?: filter_var($env, \FILTER_VALIDATE_FLOAT));
 
-            return 'not' === $prefix xor $env;
+            return 'not' === $prefix ? !$env : $env;
         }
 
         if ('int' === $prefix) {
@@ -313,7 +315,7 @@ class EnvVarProcessor implements EnvVarProcessorInterface
         }
 
         if ('csv' === $prefix) {
-            return '' === $env ? [] : str_getcsv($env, ',', '"', '');
+            return str_getcsv($env, ',', '"', '');
         }
 
         if ('trim' === $prefix) {

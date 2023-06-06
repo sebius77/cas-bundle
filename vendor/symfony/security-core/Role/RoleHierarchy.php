@@ -49,9 +49,6 @@ class RoleHierarchy implements RoleHierarchyInterface
         return array_values(array_unique($reachableRoles));
     }
 
-    /**
-     * @return void
-     */
     protected function buildRoleMap()
     {
         $this->map = [];

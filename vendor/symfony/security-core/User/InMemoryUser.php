@@ -76,7 +76,7 @@ final class InMemoryUser implements UserInterface, PasswordAuthenticatedUserInte
         return $this->enabled;
     }
 
-    public function eraseCredentials(): void
+    public function eraseCredentials()
     {
     }
 

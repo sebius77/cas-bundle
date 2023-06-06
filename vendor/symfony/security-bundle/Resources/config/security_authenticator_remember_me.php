@@ -50,6 +50,7 @@ return static function (ContainerConfigurator $container) {
             ->abstract()
             ->args([
                 abstract_arg('token provider'),
+                param('kernel.secret'),
                 abstract_arg('user provider'),
                 service('request_stack'),
                 abstract_arg('options'),

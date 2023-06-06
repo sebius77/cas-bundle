@@ -23,9 +23,6 @@ trait ContainerAwareTrait
      */
     protected $container;
 
-    /**
-     * @return void
-     */
     public function setContainer(ContainerInterface $container = null)
     {
         if (1 > \func_num_args()) {

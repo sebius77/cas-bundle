@@ -33,14 +33,13 @@ trait TagTrait
         return $this;
     }
 
-    private function validateAttributes(string $tag, array $attributes, array $path = []): void
+    private function validateAttributes(string $tagName, array $attributes, string $prefix = ''): void
     {
-        foreach ($attributes as $name => $value) {
+        foreach ($attributes as $attribute => $value) {
             if (\is_array($value)) {
-                $this->validateAttributes($tag, $value, [...$path, $name]);
+                $this->validateAttributes($tagName, $value, $attribute.'.');
             } elseif (!\is_scalar($value ?? '')) {
-                $name = implode('.', [...$path, $name]);
-                throw new InvalidArgumentException(sprintf('A tag attribute must be of a scalar-type or an array of scalar-types for service "%s", tag "%s", attribute "%s".', $this->id, $tag, $name));
+                throw new InvalidArgumentException(sprintf('A tag attribute must be of a scalar-type or an array of scalar-types for service "%s", tag "%s", attribute "%s".', $this->id, $tagName, $prefix.$attribute));
             }
         }
     }

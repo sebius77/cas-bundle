@@ -51,7 +51,7 @@ class RemoteUserFactory implements AuthenticatorFactoryInterface
         return 'remote-user';
     }
 
-    public function addConfiguration(NodeDefinition $node): void
+    public function addConfiguration(NodeDefinition $node)
     {
         $node
             ->children()

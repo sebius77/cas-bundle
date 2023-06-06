@@ -31,7 +31,10 @@ class VoteListener implements EventSubscriberInterface
         $this->traceableAccessDecisionManager = $traceableAccessDecisionManager;
     }
 
-    public function onVoterVote(VoteEvent $event): void
+    /**
+     * Event dispatched by a voter during access manager decision.
+     */
+    public function onVoterVote(VoteEvent $event)
     {
         $this->traceableAccessDecisionManager->addVoterVote($event->getVoter(), $event->getAttributes(), $event->getVote());
     }
