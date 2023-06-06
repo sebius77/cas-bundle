@@ -79,7 +79,7 @@ class ContextListener extends AbstractListener
     /**
      * Reads the Security Token from the session.
      */
-    public function authenticate(RequestEvent $event)
+    public function authenticate(RequestEvent $event): void
     {
         if (!$this->registered && null !== $this->dispatcher && $event->isMainRequest()) {
             $this->dispatcher->addListener(KernelEvents::RESPONSE, $this->onKernelResponse(...));
@@ -147,7 +147,7 @@ class ContextListener extends AbstractListener
     /**
      * Writes the security token into the session.
      */
-    public function onKernelResponse(ResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
@@ -251,7 +251,7 @@ class ContextListener extends AbstractListener
         throw new \RuntimeException(sprintf('There is no user provider for user "%s". Shouldn\'t the "supportsClass()" method of your user provider return true for this classname?', $userClass));
     }
 
-    private function safelyUnserialize(string $serializedToken)
+    private function safelyUnserialize(string $serializedToken): mixed
     {
         $token = null;
         $prevUnserializeHandler = ini_set('unserialize_callback_func', __CLASS__.'::handleUnserializeCallback');
@@ -307,8 +307,8 @@ class ContextListener extends AbstractListener
         }
 
         if (
-            \count($userRoles) !== \count($refreshedToken->getRoleNames()) ||
-            \count($userRoles) !== \count(array_intersect($userRoles, $refreshedToken->getRoleNames()))
+            \count($userRoles) !== \count($refreshedToken->getRoleNames())
+            || \count($userRoles) !== \count(array_intersect($userRoles, $refreshedToken->getRoleNames()))
         ) {
             return true;
         }
@@ -323,7 +323,7 @@ class ContextListener extends AbstractListener
     /**
      * @internal
      */
-    public static function handleUnserializeCallback(string $class)
+    public static function handleUnserializeCallback(string $class): never
     {
         throw new \ErrorException('Class not found: '.$class, 0x37313BC);
     }
