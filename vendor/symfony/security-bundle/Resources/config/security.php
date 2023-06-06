@@ -42,6 +42,7 @@ use Symfony\Component\Security\Core\User\InMemoryUserProvider;
 use Symfony\Component\Security\Core\User\MissingUserProvider;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Controller\SecurityTokenValueResolver;
 use Symfony\Component\Security\Http\Controller\UserValueResolver;
 use Symfony\Component\Security\Http\EventListener\IsGrantedAttributeListener;
 use Symfony\Component\Security\Http\Firewall;
@@ -83,7 +84,7 @@ return static function (ContainerConfigurator $container) {
                 service_locator([
                     'security.token_storage' => service('security.token_storage'),
                     'security.authorization_checker' => service('security.authorization_checker'),
-                    'security.user_authenticator' => service('security.user_authenticator')->ignoreOnInvalid(),
+                    'security.authenticator.managers_locator' => service('security.authenticator.managers_locator')->ignoreOnInvalid(),
                     'request_stack' => service('request_stack'),
                     'security.firewall.map' => service('security.firewall.map'),
                     'security.user_checker' => service('security.user_checker'),
@@ -100,13 +101,22 @@ return static function (ContainerConfigurator $container) {
             ->args([
                 service('security.token_storage'),
             ])
-            ->tag('controller.argument_value_resolver', ['priority' => 120])
+            ->tag('controller.argument_value_resolver', ['priority' => 120, 'name' => UserValueResolver::class])
+
+        ->set('security.security_token_value_resolver', SecurityTokenValueResolver::class)
+            ->args([
+                service('security.token_storage'),
+            ])
+            ->tag('controller.argument_value_resolver', ['priority' => 120, 'name' => SecurityTokenValueResolver::class])
 
         // Authentication related services
         ->set('security.authentication.trust_resolver', AuthenticationTrustResolver::class)
 
         ->set('security.authentication.session_strategy', SessionAuthenticationStrategy::class)
-            ->args([param('security.authentication.session_strategy.strategy')])
+            ->args([
+                param('security.authentication.session_strategy.strategy'),
+                service('security.csrf.token_storage')->ignoreOnInvalid(),
+            ])
         ->alias(SessionAuthenticationStrategyInterface::class, 'security.authentication.session_strategy')
 
         ->set('security.authentication.session_strategy_noop', SessionAuthenticationStrategy::class)
