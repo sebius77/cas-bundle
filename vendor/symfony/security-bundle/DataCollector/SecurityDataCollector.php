@@ -44,7 +44,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
     private ?TraceableFirewallListener $firewall;
     private bool $hasVarDumper;
 
-    public function __construct(TokenStorageInterface $tokenStorage = null, RoleHierarchyInterface $roleHierarchy = null, LogoutUrlGenerator $logoutUrlGenerator = null, AccessDecisionManagerInterface $accessDecisionManager = null, FirewallMapInterface $firewallMap = null, TraceableFirewallListener $firewall = null)
+    public function __construct(?TokenStorageInterface $tokenStorage = null, ?RoleHierarchyInterface $roleHierarchy = null, ?LogoutUrlGenerator $logoutUrlGenerator = null, ?AccessDecisionManagerInterface $accessDecisionManager = null, ?FirewallMapInterface $firewallMap = null, ?TraceableFirewallListener $firewall = null)
     {
         $this->tokenStorage = $tokenStorage;
         $this->roleHierarchy = $roleHierarchy;
@@ -55,7 +55,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
         $this->hasVarDumper = class_exists(ClassStub::class);
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
         if (null === $this->tokenStorage) {
             $this->data = [
@@ -114,7 +114,7 @@ class SecurityDataCollector extends DataCollector implements LateDataCollectorIn
 
             $this->data = [
                 'enabled' => true,
-                'authenticated' => method_exists($token, 'isAuthenticated') ? $token->isAuthenticated(false) : (bool) $token->getUser(),
+                'authenticated' => (bool) $token->getUser(),
                 'impersonated' => null !== $impersonatorUser,
                 'impersonator_user' => $impersonatorUser,
                 'impersonation_exit_path' => null,

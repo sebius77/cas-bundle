@@ -57,30 +57,17 @@ class PropertyAccessor implements PropertyAccessorInterface
     private const CACHE_PREFIX_READ = 'r';
     private const CACHE_PREFIX_WRITE = 'w';
     private const CACHE_PREFIX_PROPERTY_PATH = 'p';
-
-    private $magicMethodsFlags;
-    private $ignoreInvalidIndices;
-    private $ignoreInvalidProperty;
-
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cacheItemPool;
-
-    private $propertyPathCache = [];
-
-    /**
-     * @var PropertyReadInfoExtractorInterface
-     */
-    private $readInfoExtractor;
-
-    /**
-     * @var PropertyWriteInfoExtractorInterface
-     */
-    private $writeInfoExtractor;
-    private $readPropertyCache = [];
-    private $writePropertyCache = [];
     private const RESULT_PROTO = [self::VALUE => null];
+
+    private int $magicMethodsFlags;
+    private bool $ignoreInvalidIndices;
+    private bool $ignoreInvalidProperty;
+    private ?CacheItemPoolInterface $cacheItemPool;
+    private array $propertyPathCache = [];
+    private PropertyReadInfoExtractorInterface $readInfoExtractor;
+    private PropertyWriteInfoExtractorInterface $writeInfoExtractor;
+    private array $readPropertyCache = [];
+    private array $writePropertyCache = [];
 
     /**
      * Should not be used by application code. Use
@@ -92,7 +79,7 @@ class PropertyAccessor implements PropertyAccessorInterface
      * @param int $throw        A bitwise combination of the THROW_* constants
      *                          to specify when exceptions should be thrown
      */
-    public function __construct(int $magicMethods = self::MAGIC_GET | self::MAGIC_SET, int $throw = self::THROW_ON_INVALID_PROPERTY_PATH, CacheItemPoolInterface $cacheItemPool = null, PropertyReadInfoExtractorInterface $readInfoExtractor = null, PropertyWriteInfoExtractorInterface $writeInfoExtractor = null)
+    public function __construct(int $magicMethods = self::MAGIC_GET | self::MAGIC_SET, int $throw = self::THROW_ON_INVALID_PROPERTY_PATH, ?CacheItemPoolInterface $cacheItemPool = null, ?PropertyReadInfoExtractorInterface $readInfoExtractor = null, ?PropertyWriteInfoExtractorInterface $writeInfoExtractor = null)
     {
         $this->magicMethodsFlags = $magicMethods;
         $this->ignoreInvalidIndices = 0 === ($throw & self::THROW_ON_INVALID_INDEX);
@@ -119,10 +106,7 @@ class PropertyAccessor implements PropertyAccessorInterface
         return $propertyValues[\count($propertyValues) - 1][self::VALUE];
     }
 
-    /**
-     * @return void
-     */
-    public function setValue(object|array &$objectOrArray, string|PropertyPathInterface $propertyPath, mixed $value)
+    public function setValue(object|array &$objectOrArray, string|PropertyPathInterface $propertyPath, mixed $value): void
     {
         if (\is_object($objectOrArray) && false === strpbrk((string) $propertyPath, '.[')) {
             $zval = [
@@ -200,7 +184,7 @@ class PropertyAccessor implements PropertyAccessorInterface
         }
     }
 
-    private static function throwInvalidArgumentException(string $message, array $trace, int $i, string $propertyPath, \Throwable $previous = null): void
+    private static function throwInvalidArgumentException(string $message, array $trace, int $i, string $propertyPath, ?\Throwable $previous = null): void
     {
         if (!isset($trace[$i]['file']) || __FILE__ !== $trace[$i]['file']) {
             return;
@@ -290,14 +274,7 @@ class PropertyAccessor implements PropertyAccessorInterface
         for ($i = 0; $i < $lastIndex; ++$i) {
             $property = $propertyPath->getElement($i);
             $isIndex = $propertyPath->isIndex($i);
-
-            $isNullSafe = false;
-            if (method_exists($propertyPath, 'isNullSafe')) {
-                // To be removed in symfony 7 once we are sure isNullSafe is always implemented.
-                $isNullSafe = $propertyPath->isNullSafe($i);
-            } else {
-                trigger_deprecation('symfony/property-access', '6.2', 'The "%s()" method in class "%s" needs to be implemented in version 7.0, not defining it is deprecated.', 'isNullSafe', PropertyPathInterface::class);
-            }
+            $isNullSafe = $propertyPath->isNullSafe($i);
 
             if ($isIndex) {
                 // Create missing nested arrays on demand
@@ -436,7 +413,7 @@ class PropertyAccessor implements PropertyAccessorInterface
                 }
             } catch (\Error $e) {
                 // handle uninitialized properties in PHP >= 7.4
-                if (preg_match('/^Typed property ([\w\\\\@]+)::\$(\w+) must not be accessed before initialization$/', $e->getMessage(), $matches)) {
+                if (preg_match('/^Typed property ([\w\\\\@]+)::\$(\w+) must not be accessed before initialization$/', $e->getMessage(), $matches) || preg_match('/^Cannot access uninitialized non-nullable property ([\w\\\\@]+)::\$(\w+) by reference$/', $e->getMessage(), $matches)) {
                     $r = new \ReflectionProperty(str_contains($matches[1], '@anonymous') ? $class : $matches[1], $matches[2]);
                     $type = ($type = $r->getType()) instanceof \ReflectionNamedType ? $type->getName() : (string) $type;
 
@@ -514,7 +491,7 @@ class PropertyAccessor implements PropertyAccessorInterface
      *
      * @throws NoSuchPropertyException if the property does not exist or is not public
      */
-    private function writeProperty(array $zval, string $property, mixed $value): void
+    private function writeProperty(array $zval, string $property, mixed $value, bool $recursive = false): void
     {
         if (!\is_object($zval[self::VALUE])) {
             throw new NoSuchPropertyException(sprintf('Cannot write property "%s" to an array. Maybe you should write the property path as "[%1$s]" instead?', $property));
@@ -524,24 +501,37 @@ class PropertyAccessor implements PropertyAccessorInterface
         $class = $object::class;
         $mutator = $this->getWriteInfo($class, $property, $value);
 
-        if (PropertyWriteInfo::TYPE_NONE !== $mutator->getType()) {
-            $type = $mutator->getType();
+        try {
+            if (PropertyWriteInfo::TYPE_NONE !== $mutator->getType()) {
+                $type = $mutator->getType();
 
-            if (PropertyWriteInfo::TYPE_METHOD === $type) {
-                $object->{$mutator->getName()}($value);
-            } elseif (PropertyWriteInfo::TYPE_PROPERTY === $type) {
-                $object->{$mutator->getName()} = $value;
-            } elseif (PropertyWriteInfo::TYPE_ADDER_AND_REMOVER === $type) {
-                $this->writeCollection($zval, $property, $value, $mutator->getAdderInfo(), $mutator->getRemoverInfo());
+                if (PropertyWriteInfo::TYPE_METHOD === $type) {
+                    $object->{$mutator->getName()}($value);
+                } elseif (PropertyWriteInfo::TYPE_PROPERTY === $type) {
+                    $object->{$mutator->getName()} = $value;
+                } elseif (PropertyWriteInfo::TYPE_ADDER_AND_REMOVER === $type) {
+                    $this->writeCollection($zval, $property, $value, $mutator->getAdderInfo(), $mutator->getRemoverInfo());
+                }
+            } elseif ($object instanceof \stdClass && property_exists($object, $property)) {
+                $object->$property = $value;
+            } elseif (!$this->ignoreInvalidProperty) {
+                if ($mutator->hasErrors()) {
+                    throw new NoSuchPropertyException(implode('. ', $mutator->getErrors()).'.');
+                }
+
+                throw new NoSuchPropertyException(sprintf('Could not determine access type for property "%s" in class "%s".', $property, get_debug_type($object)));
             }
-        } elseif ($object instanceof \stdClass && property_exists($object, $property)) {
-            $object->$property = $value;
-        } elseif (!$this->ignoreInvalidProperty) {
-            if ($mutator->hasErrors()) {
-                throw new NoSuchPropertyException(implode('. ', $mutator->getErrors()).'.');
+        } catch (\TypeError $e) {
+            if ($recursive || !$value instanceof \DateTimeInterface || !\in_array($value::class, ['DateTime', 'DateTimeImmutable'], true) || __FILE__ !== ($e->getTrace()[0]['file'] ?? null)) {
+                throw $e;
             }
 
-            throw new NoSuchPropertyException(sprintf('Could not determine access type for property "%s" in class "%s".', $property, get_debug_type($object)));
+            $value = $value instanceof \DateTimeImmutable ? \DateTime::createFromImmutable($value) : \DateTimeImmutable::createFromMutable($value);
+            try {
+                $this->writeProperty($zval, $property, $value, true);
+            } catch (\TypeError) {
+                throw $e; // throw the previous error
+            }
         }
     }
 
@@ -662,7 +652,7 @@ class PropertyAccessor implements PropertyAccessorInterface
      *
      * @throws \LogicException When the Cache Component isn't available
      */
-    public static function createCache(string $namespace, int $defaultLifetime, string $version, LoggerInterface $logger = null): AdapterInterface
+    public static function createCache(string $namespace, int $defaultLifetime, string $version, ?LoggerInterface $logger = null): AdapterInterface
     {
         if (!class_exists(ApcuAdapter::class)) {
             throw new \LogicException(sprintf('The Symfony Cache component must be installed to use "%s()".', __METHOD__));

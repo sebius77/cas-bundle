@@ -1,6 +1,20 @@
 CHANGELOG
 =========
 
+
+7.0
+---
+
+ * Remove the `Security` class, use `Symfony\Bundle\SecurityBundle\Security` instead
+ * Require explicit argument when calling `TokenStorage::setToken()`
+ * Change argument `$lastUsed` of `TokenProviderInterface::updateToken()` to accept `DateTimeInterface`
+
+6.4
+---
+
+ * Make `PersistentToken` immutable
+ * Deprecate accepting only `DateTime` for `TokenProviderInterface::updateToken()`, use `DateTimeInterface` instead
+
 6.3
 ---
 

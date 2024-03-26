@@ -74,7 +74,7 @@ class FormLoginAuthenticator extends AbstractLoginFormAuthenticator
     {
         return ($this->options['post_only'] ? $request->isMethod('POST') : true)
             && $this->httpUtils->checkRequestPath($request, $this->options['check_path'])
-            && ($this->options['form_only'] ? 'form' === (method_exists(Request::class, 'getContentTypeFormat') ? $request->getContentTypeFormat() : $request->getContentType()) : true);
+            && ($this->options['form_only'] ? 'form' === $request->getContentTypeFormat() : true);
     }
 
     public function authenticate(Request $request): Passport
@@ -143,7 +143,7 @@ class FormLoginAuthenticator extends AbstractLoginFormAuthenticator
         $this->httpKernel = $httpKernel;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         if (!$this->options['use_forward']) {
             return parent::start($request, $authException);

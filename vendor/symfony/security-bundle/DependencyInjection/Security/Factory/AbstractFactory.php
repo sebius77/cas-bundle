@@ -16,9 +16,6 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * AbstractFactory is the base class for all classes inheriting from
- * AbstractAuthenticationListener.
- *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
@@ -67,7 +64,12 @@ abstract class AbstractFactory implements AuthenticatorFactoryInterface
         ;
 
         foreach (array_merge($this->options, $this->defaultSuccessHandlerOptions, $this->defaultFailureHandlerOptions) as $name => $default) {
-            if (\is_bool($default)) {
+            if ('require_previous_session' === $name) {
+                $builder
+                    ->booleanNode($name)
+                    ->setDeprecated('symfony/security-bundle', '6.4', 'Option "%node%" at "%path%" is deprecated, it will be removed in version 7.0. Setting it has no effect anymore.')
+                    ->defaultValue($default);
+            } elseif (\is_bool($default)) {
                 $builder->booleanNode($name)->defaultValue($default);
             } else {
                 $builder->scalarNode($name)->defaultValue($default);
