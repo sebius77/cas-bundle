@@ -1,6 +1,21 @@
 CHANGELOG
 =========
 
+7.2
+---
+
+ * Pass the current token to the `checkPostAuth()` method of user checkers
+ * Deprecate argument `$secret` of `RememberMeAuthenticator`
+ * Deprecate passing an empty string as `$userIdentifier` argument to `UserBadge` constructor
+ * Allow passing passport attributes to the `UserAuthenticatorInterface::authenticateUser()` method
+
+7.1
+---
+
+ * Add `#[IsCsrfTokenValid]` attribute
+ * Add CAS 2.0 access token handler
+ * Make empty username or empty password on form login attempts return Bad Request (400)
+
 7.0
 ---
 

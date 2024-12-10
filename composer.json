@@ -1,8 +1,8 @@
 {
     "name": "sebius77/cas-bundle",
     "type": "symfony-bundle",
-    "description": "Basic CAS (SSO) authenticator for Symfony 5.4 or more with the new authentication system inspired By PRayno/CasAuthBundle and Yraiso/casauth-bundle",
-    "keywords": ["PRayno", "Sebius77", "CAS", "SSO", "Symfony 5.4", "Symfony 6"],
+    "description": "Basic CAS (SSO) authenticator for Symfony 5.4, 6 and 7 with the new authentication system inspired By PRayno/CasAuthBundle and Yraiso/casauth-bundle",
+    "keywords": ["PRayno", "Sebius77", "CAS", "SSO", "Symfony 5.4", "Symfony 6", "Symfony 7"],
     "license": "MIT",
     "authors": [
 		{
@@ -11,12 +11,12 @@
 		}
     ],
     "require": {
-        "symfony/config": "^5.0|^6.4",
-        "symfony/dependency-injection": "^5.0|^6.4",
-        "symfony/http-foundation": "^5.0|^6.4",
-        "symfony/http-kernel": "^5.0|^6.4",
-        "symfony/security-bundle": "^5.0|^6.4",
-        "symfony/http-client": "^5.0|^6.4"
+        "symfony/config": "^5.0|^6.4|^7.0",
+        "symfony/dependency-injection": "^5.0|^6.4|^7.0",
+        "symfony/http-foundation": "^5.0|^6.4|^7.0",
+        "symfony/http-kernel": "^5.0|^6.4|^7.0",
+        "symfony/security-bundle": "^5.0|^6.4|^7.0",
+        "symfony/http-client": "^5.0|^6.4|^7.0"
     },
     "autoload": {
         "psr-4": { "Sebius77\\CasBundle\\": ""}
