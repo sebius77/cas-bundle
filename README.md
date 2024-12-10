@@ -1,5 +1,5 @@
 # cas-bundle
-Bundle for SSO authentication in Symfony 5.4 or more and inspired By PraynoCasAuthBundle and yraiso/casauth-bundle
+Bundle for SSO authentication in Symfony 5.4, 6 and symfony 7 and inspired By PraynoCasAuthBundle and yraiso/casauth-bundle
 
 # Installation
 
