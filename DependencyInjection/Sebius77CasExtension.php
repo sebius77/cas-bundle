@@ -4,7 +4,6 @@ namespace Sebius77\CasBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Sebius77\CasBundle\DependencyInjection\Configuration;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
