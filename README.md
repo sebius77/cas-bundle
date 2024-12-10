@@ -10,7 +10,6 @@ Bundle for SSO authentication in Symfony 5.4, 6 and symfony 7 and inspired By Pr
 # Configuration
 
 ## Create the file config/packages/sebius77_cas.yaml and add :
-
     sebius77_cas:
         server_login_url: https://cas_server/cas
         server_validation_url: https://cas_server/cas/serviceValidate
@@ -20,7 +19,6 @@ Bundle for SSO authentication in Symfony 5.4, 6 and symfony 7 and inspired By Pr
     
 
 ## Modify your security.yaml
-
     security:
         enable_authenticator_manager: true
         providers:
