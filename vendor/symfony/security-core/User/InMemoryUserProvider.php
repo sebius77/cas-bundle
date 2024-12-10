@@ -21,6 +21,8 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
  * (a backend with a unique admin for instance)
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @template-implements UserProviderInterface<InMemoryUser>
  */
 class InMemoryUserProvider implements UserProviderInterface
 {
@@ -49,11 +51,13 @@ class InMemoryUserProvider implements UserProviderInterface
 
     /**
      * Adds a new User to the provider.
-     *
-     * @throws \LogicException
      */
-    public function createUser(UserInterface $user)
+    public function createUser(UserInterface $user): void
     {
+        if (!$user instanceof InMemoryUser) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_debug_type($user)));
+        }
+
         $userIdentifier = strtolower($user->getUserIdentifier());
         if (isset($this->users[$userIdentifier])) {
             throw new \LogicException('Another user with the same username already exists.');
@@ -87,11 +91,11 @@ class InMemoryUserProvider implements UserProviderInterface
     }
 
     /**
-     * Returns the user by given username.
+     * Returns the user by given user.
      *
      * @throws UserNotFoundException if user whose given username does not exist
      */
-    private function getUser(string $username)/* : InMemoryUser */
+    private function getUser(string $username): InMemoryUser
     {
         if (!isset($this->users[strtolower($username)])) {
             $ex = new UserNotFoundException(sprintf('Username "%s" does not exist.', $username));

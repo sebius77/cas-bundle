@@ -32,18 +32,18 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
  */
 class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
-    protected $httpKernel;
-    protected $httpUtils;
-    protected $logger;
-    protected $options;
-    protected $defaultOptions = [
+    protected HttpKernelInterface $httpKernel;
+    protected HttpUtils $httpUtils;
+    protected array $options;
+    protected ?LoggerInterface $logger;
+    protected array $defaultOptions = [
         'failure_path' => null,
         'failure_forward' => false,
         'login_path' => '/login',
         'failure_path_parameter' => '_failure_path',
     ];
 
-    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [], LoggerInterface $logger = null)
+    public function __construct(HttpKernelInterface $httpKernel, HttpUtils $httpUtils, array $options = [], ?LoggerInterface $logger = null)
     {
         $this->httpKernel = $httpKernel;
         $this->httpUtils = $httpUtils;
@@ -59,7 +59,7 @@ class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandle
         return $this->options;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = array_merge($this->defaultOptions, $options);
     }
@@ -88,7 +88,9 @@ class DefaultAuthenticationFailureHandler implements AuthenticationFailureHandle
 
         $this->logger?->debug('Authentication failure, redirect triggered.', ['failure_path' => $options['failure_path']]);
 
-        $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+        if (!$request->attributes->getBoolean('_stateless')) {
+            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+        }
 
         return $this->httpUtils->createRedirectResponse($request, $options['failure_path']);
     }

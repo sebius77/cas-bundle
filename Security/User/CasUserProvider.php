@@ -63,7 +63,7 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
     /**
      * Tells Symfony to use this provider for this User class.
      */
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return CasUser::class === $class || is_subclass_of($class, CasUser::class);
     }

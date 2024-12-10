@@ -57,7 +57,7 @@ class DebugClassLoader
         'null' => 'null',
         'resource' => 'resource',
         'boolean' => 'bool',
-        'true' => 'bool',
+        'true' => 'true',
         'false' => 'false',
         'integer' => 'int',
         'array' => 'array',
@@ -75,6 +75,7 @@ class DebugClassLoader
         '$this' => 'static',
         'list' => 'array',
         'class-string' => 'string',
+        'never' => 'never',
     ];
 
     private const BUILTIN_RETURN_TYPES = [
@@ -92,6 +93,9 @@ class DebugClassLoader
         'parent' => true,
         'mixed' => true,
         'static' => true,
+        'null' => true,
+        'true' => true,
+        'never' => true,
     ];
 
     private const MAGIC_METHODS = [
@@ -100,6 +104,10 @@ class DebugClassLoader
         '__toString' => 'string',
         '__debugInfo' => 'array',
         '__serialize' => 'array',
+        '__set' => 'void',
+        '__unset' => 'void',
+        '__unserialize' => 'void',
+        '__wakeup' => 'void',
     ];
 
     /**
@@ -130,7 +138,7 @@ class DebugClassLoader
     {
         $this->classLoader = $classLoader;
         $this->isFinder = \is_array($classLoader) && method_exists($classLoader[0], 'findFile');
-        parse_str(getenv('SYMFONY_PATCH_TYPE_DECLARATIONS') ?: '', $this->patchTypes);
+        parse_str($_ENV['SYMFONY_PATCH_TYPE_DECLARATIONS'] ?? $_SERVER['SYMFONY_PATCH_TYPE_DECLARATIONS'] ?? getenv('SYMFONY_PATCH_TYPE_DECLARATIONS') ?: '', $this->patchTypes);
         $this->patchTypes += [
             'force' => null,
             'php' => \PHP_MAJOR_VERSION.'.'.\PHP_MINOR_VERSION,
@@ -303,7 +311,7 @@ class DebugClassLoader
         $this->checkClass($class, $file);
     }
 
-    private function checkClass(string $class, string $file = null): void
+    private function checkClass(string $class, ?string $file = null): void
     {
         $exists = null === $file || class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false);
 
@@ -380,7 +388,7 @@ class DebugClassLoader
 
         // Detect annotations on the class
         if ($doc = $this->parsePhpDoc($refl)) {
-            $classIsTemplate = isset($doc['template']);
+            $classIsTemplate = isset($doc['template']) || isset($doc['template-covariant']);
 
             foreach (['final', 'deprecated', 'internal'] as $annotation) {
                 if (null !== $description = $doc[$annotation][0] ?? null) {
@@ -527,7 +535,7 @@ class DebugClassLoader
             // To read method annotations
             $doc = $this->parsePhpDoc($method);
 
-            if (($classIsTemplate || isset($doc['template'])) && $method->hasReturnType()) {
+            if (($classIsTemplate || isset($doc['template']) || isset($doc['template-covariant'])) && $method->hasReturnType()) {
                 unset($doc['return']);
             }
 
@@ -547,9 +555,7 @@ class DebugClassLoader
             $forcePatchTypes = $this->patchTypes['force'];
 
             if ($canAddReturnType = null !== $forcePatchTypes && !str_contains($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
-                if ('void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
-                    $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
-                }
+                $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
 
                 $canAddReturnType = 2 === (int) $forcePatchTypes
                     || false !== stripos($method->getFileName(), \DIRECTORY_SEPARATOR.'Tests'.\DIRECTORY_SEPARATOR)
@@ -588,7 +594,7 @@ class DebugClassLoader
                 continue;
             }
 
-            if (isset($doc['return']) || 'void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
+            if (isset($doc['return'])) {
                 $this->setReturnType($doc['return'] ?? self::MAGIC_METHODS[$method->name], $method->class, $method->name, $method->getFileName(), $parent, $method->getReturnType());
 
                 if (isset(self::$returnTypes[$class][$method->name][0]) && $canAddReturnType) {
@@ -754,7 +760,7 @@ class DebugClassLoader
                 if ('.' !== $f[0]) {
                     $dirFiles[$f] = $f;
                     if ($f === $file) {
-                        $kFile = $k = $file;
+                        $kFile = $file;
                     } elseif ($f !== $k = strtolower($f)) {
                         $dirFiles[$k] = $f;
                     }
@@ -790,9 +796,15 @@ class DebugClassLoader
         return $ownInterfaces;
     }
 
-    private function setReturnType(string $types, string $class, string $method, string $filename, ?string $parent, \ReflectionType $returnType = null): void
+    private function setReturnType(string $types, string $class, string $method, string $filename, ?string $parent, ?\ReflectionType $returnType = null): void
     {
         if ('__construct' === $method) {
+            return;
+        }
+
+        if ('null' === $types) {
+            self::$returnTypes[$class][$method] = ['null', 'null', $class, $filename];
+
             return;
         }
 
@@ -920,7 +932,7 @@ class DebugClassLoader
     /**
      * Utility method to add #[ReturnTypeWillChange] where php triggers deprecations.
      */
-    private function patchReturnTypeWillChange(\ReflectionMethod $method)
+    private function patchReturnTypeWillChange(\ReflectionMethod $method): void
     {
         if (\count($method->getAttributes(\ReturnTypeWillChange::class))) {
             return;
@@ -948,7 +960,7 @@ class DebugClassLoader
     /**
      * Utility method to add @return annotations to the Symfony code-base where it triggers self-deprecations.
      */
-    private function patchMethod(\ReflectionMethod $method, string $returnType, string $declaringFile, string $normalizedType)
+    private function patchMethod(\ReflectionMethod $method, string $returnType, string $declaringFile, string $normalizedType): void
     {
         static $patchedMethods = [];
         static $useStatements = [];
@@ -1087,7 +1099,7 @@ EOTXT;
         return [$namespace, $useOffset, $useMap];
     }
 
-    private function fixReturnStatements(\ReflectionMethod $method, string $returnType)
+    private function fixReturnStatements(\ReflectionMethod $method, string $returnType): void
     {
         if ('docblock' !== $this->patchTypes['force']) {
             if ('7.1' === $this->patchTypes['php'] && 'object' === ltrim($returnType, '?')) {
@@ -1119,7 +1131,20 @@ EOTXT;
         }
 
         $end = $method->isGenerator() ? $i : $method->getEndLine();
+        $inClosure = false;
+        $braces = 0;
         for (; $i < $end; ++$i) {
+            if (!$inClosure) {
+                $inClosure = false !== strpos($code[$i], 'function (');
+            }
+
+            if ($inClosure) {
+                $braces += substr_count($code[$i], '{') - substr_count($code[$i], '}');
+                $inClosure = $braces > 0;
+
+                continue;
+            }
+
             if ('void' === $returnType) {
                 $fixedCode[$i] = str_replace('    return null;', '    return;', $code[$i]);
             } elseif ('mixed' === $returnType || '?' === $returnType[0]) {

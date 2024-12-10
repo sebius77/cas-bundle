@@ -28,6 +28,10 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new RedirectResponse($this->server_login_url.'?'.$this->query_service_parameter.'='.urlencode($request->getUri()));
+        return new RedirectResponse(
+            $this->server_login_url.'?' .
+            $this->query_service_parameter .
+            '=' . urlencode($request->getUri())
+        );
     }
 }

@@ -28,7 +28,7 @@ class AuthenticationEvent extends Event
         $this->authenticationToken = $token;
     }
 
-    public function getAuthenticationToken()
+    public function getAuthenticationToken(): TokenInterface
     {
         return $this->authenticationToken;
     }

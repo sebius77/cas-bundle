@@ -13,6 +13,7 @@ namespace Symfony\Component\Security\Http\Session;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Csrf\TokenStorage\ClearableTokenStorageInterface;
 
 /**
  * The default session strategy implementation.
@@ -31,22 +32,29 @@ class SessionAuthenticationStrategy implements SessionAuthenticationStrategyInte
     public const INVALIDATE = 'invalidate';
 
     private string $strategy;
+    private ?ClearableTokenStorageInterface $csrfTokenStorage = null;
 
-    public function __construct(string $strategy)
+    public function __construct(string $strategy, ?ClearableTokenStorageInterface $csrfTokenStorage = null)
     {
         $this->strategy = $strategy;
+
+        if (self::MIGRATE === $strategy) {
+            $this->csrfTokenStorage = $csrfTokenStorage;
+        }
     }
 
-    public function onAuthentication(Request $request, TokenInterface $token)
+    public function onAuthentication(Request $request, TokenInterface $token): void
     {
         switch ($this->strategy) {
             case self::NONE:
                 return;
 
             case self::MIGRATE:
-                // Note: this logic is duplicated in several authentication listeners
-                // until Symfony 5.0 due to a security fix with BC compat
                 $request->getSession()->migrate(true);
+
+                if ($this->csrfTokenStorage) {
+                    $this->csrfTokenStorage->clear();
+                }
 
                 return;
 

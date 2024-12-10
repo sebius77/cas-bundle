@@ -58,7 +58,7 @@ class RoleVoter implements CacheableVoterInterface
         return true;
     }
 
-    protected function extractRoles(TokenInterface $token)
+    protected function extractRoles(TokenInterface $token): array
     {
         return $token->getRoleNames();
     }
