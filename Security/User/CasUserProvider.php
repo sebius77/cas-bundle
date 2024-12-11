@@ -47,7 +47,7 @@ class CasUserProvider implements UserProviderInterface, PasswordUpgraderInterfac
      * for example, re-querying for fresh User Data.
      * @return UserInterface
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof CasUser) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', get_class($user)));

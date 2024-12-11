@@ -160,6 +160,10 @@
         {
             "name": "psr/log",
             "version": "3.0.2",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "3.0.2.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
@@ -174,6 +178,10 @@
             "require": {
                 "php": ">=8.0.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-11T13:17:53+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -210,6 +218,10 @@
         {
             "name": "symfony/clock",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/clock.git",
@@ -229,6 +241,10 @@
             "provide": {
                 "psr/clock-implementation": "1.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:21:43+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "files": [
@@ -284,6 +300,10 @@
         {
             "name": "symfony/config",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -312,6 +332,10 @@
                 "symfony/service-contracts": "^2.5|^3",
                 "symfony/yaml": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-04T11:36:24+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -359,6 +383,10 @@
         {
             "name": "symfony/dependency-injection",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
@@ -392,6 +420,10 @@
                 "symfony/expression-language": "^6.4|^7.0",
                 "symfony/yaml": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-25T15:45:00+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -439,6 +471,10 @@
         {
             "name": "symfony/deprecation-contracts",
             "version": "v3.5.1",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "3.5.1.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
@@ -453,6 +489,10 @@
             "require": {
                 "php": ">=8.1"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:20:29+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -505,6 +545,19 @@
         },
         {
             "name": "symfony/error-handler",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "v7.2.1",
+            "version_normalized": "7.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/error-handler.git",
+                "reference": "6150b89186573046167796fa5f3f76601d5145f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/error-handler/zipball/6150b89186573046167796fa5f3f76601d5145f8",
+                "reference": "6150b89186573046167796fa5f3f76601d5145f8",
+=======
             "version": "v7.2.0",
             "source": {
                 "type": "git",
@@ -515,6 +568,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/error-handler/zipball/672b3dd1ef8b87119b446d67c58c106c43f965fe",
                 "reference": "672b3dd1ef8b87119b446d67c58c106c43f965fe",
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -531,6 +585,10 @@
                 "symfony/http-kernel": "^6.4|^7.0",
                 "symfony/serializer": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-12-07T08:50:44+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "bin": [
                 "Resources/bin/patch-type-declarations"
             ],
@@ -560,7 +618,11 @@
             "description": "Provides tools to manage errors and ease debugging PHP code",
             "homepage": "https://symfony.com",
             "support": {
+<<<<<<< HEAD:vendor/composer/installed.json
+                "source": "https://github.com/symfony/error-handler/tree/v7.2.1"
+=======
                 "source": "https://github.com/symfony/error-handler/tree/v7.2.0"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             },
             "funding": [
                 {
@@ -581,6 +643,10 @@
         {
             "name": "symfony/event-dispatcher",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -614,6 +680,10 @@
                 "symfony/service-contracts": "^2.5|^3",
                 "symfony/stopwatch": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:21:43+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -661,6 +731,10 @@
         {
             "name": "symfony/event-dispatcher-contracts",
             "version": "v3.5.1",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "3.5.1.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
@@ -676,6 +750,10 @@
                 "php": ">=8.1",
                 "psr/event-dispatcher": "^1"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:20:29+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -737,6 +815,10 @@
         {
             "name": "symfony/filesystem",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
@@ -756,6 +838,10 @@
             "require-dev": {
                 "symfony/process": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-10-25T15:15:23+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -803,6 +889,10 @@
         {
             "name": "symfony/http-client",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
@@ -848,6 +938,10 @@
                 "symfony/rate-limiter": "^6.4|^7.0",
                 "symfony/stopwatch": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-29T08:22:02+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -898,6 +992,10 @@
         {
             "name": "symfony/http-client-contracts",
             "version": "v3.5.1",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "3.5.1.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
@@ -912,6 +1010,10 @@
             "require": {
                 "php": ">=8.1"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-25T12:02:18+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -976,6 +1078,10 @@
         {
             "name": "symfony/http-foundation",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
@@ -1007,6 +1113,10 @@
                 "symfony/mime": "^6.4|^7.0",
                 "symfony/rate-limiter": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-13T18:58:46+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1053,6 +1163,19 @@
         },
         {
             "name": "symfony/http-kernel",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "v7.2.1",
+            "version_normalized": "7.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-kernel.git",
+                "reference": "d8ae58eecae44c8e66833e76cc50a4ad3c002d97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/d8ae58eecae44c8e66833e76cc50a4ad3c002d97",
+                "reference": "d8ae58eecae44c8e66833e76cc50a4ad3c002d97",
+=======
             "version": "v7.2.0",
             "source": {
                 "type": "git",
@@ -1063,6 +1186,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-kernel/zipball/6b4722a25e0aed1ccb4914b9bcbd493cc4676b4d",
                 "reference": "6b4722a25e0aed1ccb4914b9bcbd493cc4676b4d",
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -1121,6 +1245,10 @@
                 "symfony/var-exporter": "^6.4|^7.0",
                 "twig/twig": "^3.12"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-12-11T12:09:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1147,7 +1275,11 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
+<<<<<<< HEAD:vendor/composer/installed.json
+                "source": "https://github.com/symfony/http-kernel/tree/v7.2.1"
+=======
                 "source": "https://github.com/symfony/http-kernel/tree/v7.2.0"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             },
             "funding": [
                 {
@@ -1168,6 +1300,10 @@
         {
             "name": "symfony/password-hasher",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/password-hasher.git",
@@ -1189,6 +1325,10 @@
                 "symfony/console": "^6.4|^7.0",
                 "symfony/security-core": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:21:43+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1240,6 +1380,10 @@
         {
             "name": "symfony/polyfill-ctype",
             "version": "v1.31.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "1.31.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -1260,6 +1404,10 @@
             "suggest": {
                 "ext-ctype": "For best performance"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-09T11:45:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -1319,6 +1467,10 @@
         {
             "name": "symfony/polyfill-intl-grapheme",
             "version": "v1.31.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "1.31.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
@@ -1336,6 +1488,10 @@
             "suggest": {
                 "ext-intl": "For best performance"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-09T11:45:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -1397,6 +1553,10 @@
         {
             "name": "symfony/polyfill-intl-normalizer",
             "version": "v1.31.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "1.31.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
@@ -1414,6 +1574,10 @@
             "suggest": {
                 "ext-intl": "For best performance"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-09T11:45:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -1478,6 +1642,10 @@
         {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.31.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "1.31.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -1498,6 +1666,10 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-09T11:45:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -1553,11 +1725,19 @@
                     "type": "tidelift"
                 }
             ],
+<<<<<<< HEAD:vendor/composer/installed.json
+            "install-path": "../symfony/polyfill-mbstring"
+=======
             "time": "2024-09-09T11:45:10+00:00"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
         },
         {
             "name": "symfony/polyfill-php83",
             "version": "v1.31.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "1.31.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php83.git",
@@ -1572,6 +1752,10 @@
             "require": {
                 "php": ">=7.2"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-09T11:45:10+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "thanks": {
@@ -1634,6 +1818,10 @@
         {
             "name": "symfony/property-access",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/property-access.git",
@@ -1652,6 +1840,10 @@
             "require-dev": {
                 "symfony/cache": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-26T12:28:35+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1709,6 +1901,19 @@
         },
         {
             "name": "symfony/property-info",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "v7.2.1",
+            "version_normalized": "7.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-info.git",
+                "reference": "65fb9be15380f949d72ff405473cce733364b8b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/65fb9be15380f949d72ff405473cce733364b8b4",
+                "reference": "65fb9be15380f949d72ff405473cce733364b8b4",
+=======
             "version": "v7.2.0",
             "source": {
                 "type": "git",
@@ -1719,6 +1924,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/property-info/zipball/b00580d9d7c9654e1df95df85105d0da67418b3f",
                 "reference": "b00580d9d7c9654e1df95df85105d0da67418b3f",
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -1738,6 +1944,10 @@
                 "symfony/dependency-injection": "^6.4|^7.0",
                 "symfony/serializer": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-12-07T08:50:44+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1772,7 +1982,11 @@
                 "validator"
             ],
             "support": {
+<<<<<<< HEAD:vendor/composer/installed.json
+                "source": "https://github.com/symfony/property-info/tree/v7.2.1"
+=======
                 "source": "https://github.com/symfony/property-info/tree/v7.2.0"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             },
             "funding": [
                 {
@@ -1793,6 +2007,10 @@
         {
             "name": "symfony/security-bundle",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-bundle.git",
@@ -1852,6 +2070,10 @@
                 "twig/twig": "^3.12",
                 "web-token/jwt-library": "^3.3.2|^4.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-10-23T08:31:32+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -1899,6 +2121,10 @@
         {
             "name": "symfony/security-core",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-core.git",
@@ -1939,6 +2165,10 @@
                 "symfony/translation": "^6.4.3|^7.0.3",
                 "symfony/validator": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-27T09:50:52+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1986,6 +2216,10 @@
         {
             "name": "symfony/security-csrf",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-csrf.git",
@@ -2009,6 +2243,10 @@
                 "symfony/http-foundation": "^6.4|^7.0",
                 "symfony/http-kernel": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-10-08T13:08:31+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2055,6 +2293,19 @@
         },
         {
             "name": "symfony/security-http",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version": "v7.2.1",
+            "version_normalized": "7.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/security-http.git",
+                "reference": "125844598d9cef4fe72a9f6c4a78ac7c59c3f532"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/security-http/zipball/125844598d9cef4fe72a9f6c4a78ac7c59c3f532",
+                "reference": "125844598d9cef4fe72a9f6c4a78ac7c59c3f532",
+=======
             "version": "v7.2.0",
             "source": {
                 "type": "git",
@@ -2065,6 +2316,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/security-http/zipball/0d0ab4d491f22306c893b2d30ce73ea911201a61",
                 "reference": "0d0ab4d491f22306c893b2d30ce73ea911201a61",
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
                 "shasum": ""
             },
             "require": {
@@ -2097,6 +2349,10 @@
                 "symfony/translation": "^6.4|^7.0",
                 "web-token/jwt-library": "^3.3.2|^4.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-12-07T08:50:44+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -2123,7 +2379,11 @@
             "description": "Symfony Security Component - HTTP Integration",
             "homepage": "https://symfony.com",
             "support": {
+<<<<<<< HEAD:vendor/composer/installed.json
+                "source": "https://github.com/symfony/security-http/tree/v7.2.1"
+=======
                 "source": "https://github.com/symfony/security-http/tree/v7.2.0"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             },
             "funding": [
                 {
@@ -2144,6 +2404,10 @@
         {
             "name": "symfony/service-contracts",
             "version": "v3.5.1",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "3.5.1.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
@@ -2163,6 +2427,10 @@
             "conflict": {
                 "ext-psr": "<1.1|>=2"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-09-25T14:20:29+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2227,6 +2495,10 @@
         {
             "name": "symfony/string",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
@@ -2256,6 +2528,10 @@
                 "symfony/translation-contracts": "^2.5|^3.0",
                 "symfony/var-exporter": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-13T13:31:26+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "files": [
@@ -2294,6 +2570,8 @@
             ],
             "support": {
                 "source": "https://github.com/symfony/string/tree/v7.2.0"
+<<<<<<< HEAD:vendor/composer/installed.json
+=======
             },
             "funding": [
                 {
@@ -2374,6 +2652,7 @@
             ],
             "support": {
                 "source": "https://github.com/symfony/type-info/tree/v7.2.0"
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             },
             "funding": [
                 {
@@ -2392,8 +2671,90 @@
             "time": "2024-11-18T09:51:31+00:00"
         },
         {
+            "name": "symfony/type-info",
+            "version": "v7.2.1",
+            "version_normalized": "7.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/type-info.git",
+                "reference": "4f402070b08ad0b87e9cadbb07b87fb36061e6e4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/type-info/zipball/4f402070b08ad0b87e9cadbb07b87fb36061e6e4",
+                "reference": "4f402070b08ad0b87e9cadbb07b87fb36061e6e4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "psr/container": "^1.1|^2.0"
+            },
+            "require-dev": {
+                "phpstan/phpdoc-parser": "^1.0|^2.0"
+            },
+            "time": "2024-12-11T07:49:41+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\TypeInfo\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mathias Arlaud",
+                    "email": "mathias.arlaud@gmail.com"
+                },
+                {
+                    "name": "Baptiste LEDUC",
+                    "email": "baptiste.leduc@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Extracts PHP types information.",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "PHPStan",
+                "phpdoc",
+                "symfony",
+                "type"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/type-info/tree/v7.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/type-info"
+        },
+        {
             "name": "symfony/var-dumper",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
@@ -2420,6 +2781,10 @@
                 "symfony/uid": "^6.4|^7.0",
                 "twig/twig": "^3.12"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-11-08T15:48:14+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "bin": [
                 "Resources/bin/var-dump-server"
             ],
@@ -2477,6 +2842,10 @@
         {
             "name": "symfony/var-exporter",
             "version": "v7.2.0",
+<<<<<<< HEAD:vendor/composer/installed.json
+            "version_normalized": "7.2.0.0",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
@@ -2496,6 +2865,10 @@
                 "symfony/serializer": "^6.4|^7.0",
                 "symfony/var-dumper": "^6.4|^7.0"
             },
+<<<<<<< HEAD:vendor/composer/installed.json
+            "time": "2024-10-18T07:58:17+00:00",
+=======
+>>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40:composer.lock
             "type": "library",
             "autoload": {
                 "psr-4": {

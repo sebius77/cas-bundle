@@ -79,7 +79,7 @@ class CasAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, ?AuthenticationException $exception): ?Response
     {
         $data = [
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
