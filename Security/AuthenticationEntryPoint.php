@@ -2,6 +2,7 @@
 
 namespace Sebius77\CasBundle\Security;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -28,7 +29,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
-        return new Response(
+        return new RedirectResponse(
             $this->server_login_url.'?' .
             $this->query_service_parameter .
             '=' . urlencode($request->getUri())
