@@ -1,11 +1,7 @@
 {
     "name": "sebius77/cas-bundle",
     "type": "symfony-bundle",
-<<<<<<< HEAD
     "description": "Basic CAS (SSO) authenticator for Symfony 5.4, 6 and 7 with the new authentication system inspired By PRayno/CasAuthBundle and Yraiso/casauth-bundle",
-=======
-    "description": "Basic CAS (SSO) authenticator for Symfony 5.4, 6 and 7",
->>>>>>> f3e3cf5c3e5d555f676603ab05c07894f924bb40
     "keywords": ["PRayno", "Sebius77", "CAS", "SSO", "Symfony 5.4", "Symfony 6", "Symfony 7"],
     "license": "MIT",
     "authors": [
