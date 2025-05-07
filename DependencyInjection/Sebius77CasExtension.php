@@ -4,7 +4,7 @@ namespace Sebius77\CasBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Sebius77\CasBundle\DependencyInjection\Configuration;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration.
