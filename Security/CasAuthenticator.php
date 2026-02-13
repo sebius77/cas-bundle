@@ -67,13 +67,13 @@ class CasAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
-        return (bool) $request->attributes->get($this->query_ticket_parameter);
+        return $request->query->has($this->query_ticket_parameter);
     }
 
     public function authenticate(Request $request): Passport
     {
         $url = $this->server_validation_url . '?' . $this->query_ticket_parameter . '=' .
-            $request->attributes->get($this->query_ticket_parameter) . '&' .
+            $request->query->get($this->query_ticket_parameter) . '&' .
             $this->query_service_parameter . '=' . urlencode($this->removeCasTicket($request->getUri()));
 
         $response = $this->client->request('GET', $url, $this->options);
