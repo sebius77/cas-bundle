@@ -89,6 +89,7 @@ class CasAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?RedirectResponse
     {
         if ($request->query->has($this->query_ticket_parameter)) {
+            $request->getSession()->set('CAS_AUTHENTICATED', true);
             return new RedirectResponse($this->removeCasTicket($request->getUri()));
         } else
         return null;
