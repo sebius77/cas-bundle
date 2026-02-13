@@ -80,9 +80,6 @@ class CasUser implements UserInterface
         return (string) $this->uid;
     }
 
-    /**
-     *
-     */
     public function eraseCredentials(): void
     {
 
